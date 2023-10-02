@@ -7,9 +7,12 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
-java {
-    sourceCompatibility = '17'
-}
+// java {
+//     sourceCompatibility = '17'
+// }
+// 자바 버전 설정
+sourceCompatibility = 17
+targetCompatibility = 17
 
 configurations {
     compileOnly {
