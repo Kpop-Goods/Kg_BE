@@ -28,8 +28,8 @@ public class Place {
     @Column(name = "latitude", nullable = false)
     private Double latitude;
     //경도
-    @Column(name = "hardness", nullable = false)
-    private Double hardness;
+    @Column(name = "longitude", nullable = false)
+    private Double longitude;
 
     //장소명
     @Column(name = "placeName", nullable = false)

@@ -19,7 +19,7 @@ public class PlaceService {
         Place place1 = Place.builder()
                 .placeCode(place.getPlaceCode())
                 .latitude(place.getLatitude())
-                .hardness(place.getHardness())
+                .longitude(place.getLongitude())
                 .placeName(place.getPlaceName())
                 .placeImg(place.getPlaceImg())
                 .placeContent(place.getPlaceContent())
