@@ -12,6 +12,7 @@ public class PlaceDto {
     private Long placeCode;
     private Double latitude;
     private Double longitude;
+    private String placeAddress;
     private String placeName;
     private String placeImg;
     private String placeContent;

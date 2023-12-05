@@ -35,6 +35,10 @@ public class Place {
     @Column(name = "placeName", nullable = false)
     private String placeName;
 
+    //주소
+    @Column(name = "placeAddress", nullable = false)
+    private String placeAddress;
+
     //장소 이미지 (몇 개로 구성할 것인지?)
     @Column(name = "placeImg", nullable = false)
     private String placeImg; //이미지 경로

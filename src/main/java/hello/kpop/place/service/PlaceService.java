@@ -20,6 +20,7 @@ public class PlaceService {
                 .placeCode(place.getPlaceCode())
                 .latitude(place.getLatitude())
                 .longitude(place.getLongitude())
+                .placeAddress(place.getPlaceAddress())
                 .placeName(place.getPlaceName())
                 .placeImg(place.getPlaceImg())
                 .placeContent(place.getPlaceContent())
