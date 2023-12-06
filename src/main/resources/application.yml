@@ -8,6 +8,9 @@ server:
       force: true
 
 spring:
+  # 프로필 설정
+  profiles:
+    active: dev
   application:
     name: user-service
   main:
@@ -27,3 +30,4 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
