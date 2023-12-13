@@ -33,7 +33,11 @@ public class Place {
 
     //장소명
     @Column(name = "placeName", nullable = false)
-    private String placeName;
+    private String name;
+
+    //주소
+    @Column(name = "placeAddress", nullable = false)
+    private String placeAddress;
 
     //장소 이미지 (몇 개로 구성할 것인지?)
     @Column(name = "placeImg", nullable = false)
