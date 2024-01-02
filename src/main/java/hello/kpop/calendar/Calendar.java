@@ -1,4 +1,4 @@
-package hello.kpop.calender;
+package hello.kpop.calendar;
 
 import hello.kpop.artist.Artist;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "calendar")
-public class Calender {
+public class Calendar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

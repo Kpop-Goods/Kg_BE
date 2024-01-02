@@ -1,4 +1,4 @@
-package hello.kpop.calender;
+package hello.kpop.calendar;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,13 +9,13 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CalenderService {
+public class CalendarService {
 
-    private final CalenderRepository calRepository;
+    private final CalendarRepository calRepository;
 
     @Transactional
-    public void create(CalenderDto dto) { // Create
-        Calender calender = Calender.builder()
+    public void create(CalendarDto dto) { // Create
+        Calendar calendar = Calendar.builder()
                 .id(dto.getId())
                 .name(dto.getName())
                 .artist(dto.getArtist())
@@ -25,18 +25,18 @@ public class CalenderService {
                 .meta(dto.getMeta())
                 .build();
 
-        calRepository.save(calender);
+        calRepository.save(calendar);
     }
 
-    public Optional<Calender> read(Long calId) { // Read
+    public Optional<Calendar> read(Long calId) { // Read
         return calRepository.findById(calId);
     }
 
-    public Boolean update(Long calId, CalenderDto dto) { // Update
-        Optional<Calender> cal = calRepository.findById(calId);
+    public Boolean update(Long calId, CalendarDto dto) { // Update
+        Optional<Calendar> cal = calRepository.findById(calId);
         if (cal.isEmpty()) return false;
 
-        Calender calender = Calender.builder()
+        Calendar calendar = Calendar.builder()
         //      .id(dto.getId())
                 .name(dto.getName())
                 .artist(dto.getArtist())
@@ -45,12 +45,12 @@ public class CalenderService {
                 .link(dto.getLink())
                 .meta(dto.getMeta())
                 .build();
-        calRepository.save(calender);
+        calRepository.save(calendar);
         return true;
     }
 
     public Boolean delete(Long calId) { // Delete
-        Optional<Calender> cal = calRepository.findById(calId);
+        Optional<Calendar> cal = calRepository.findById(calId);
         if (cal.isEmpty()) return false;
 
         calRepository.deleteById(calId);

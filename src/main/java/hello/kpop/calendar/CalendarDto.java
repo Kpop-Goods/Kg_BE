@@ -1,4 +1,4 @@
-package hello.kpop.calender;
+package hello.kpop.calendar;
 
 import hello.kpop.artist.Artist;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import java.util.Date;
 
 @NoArgsConstructor
 @Getter
-public class CalenderDto {
+public class CalendarDto {
 
     private Long id; // id (pk)
     private Artist artist; // artist id (fk)
