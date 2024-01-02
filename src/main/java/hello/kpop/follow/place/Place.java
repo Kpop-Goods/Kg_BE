@@ -13,15 +13,15 @@ import java.util.Date;
 public class Place {
 	@Id
 	private Long id;
-
 	private Long placeid;
 
 	private String name;
-	private String address;
-	// private Double latitude;
-	// private Double longitude;
 
-	// private String placeName;
+	private String address;
+//	private Double latitude;
+//	private Double longitude;
+
+//	private String placeName;
 	private Date startDate;
 	private Date endDate;
 
