@@ -57,10 +57,10 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
-        // 사용자가 입력한 비밀번호를 암호화하여 저장된 비밀번호와 비교합니다.
-        if (!passwordEncoder.matches(userRequestDto.getUserPw(), user.getUserPw())) {
-            throw new Exception("비밀번호가 일치하지 않습니다.");
-        }
+        // // 사용자가 입력한 비밀번호를 암호화하여 저장된 비밀번호와 비교합니다.
+        // if (!passwordEncoder.matches(userRequestDto.getUserPw(), user.getUserPw())) {
+        //     throw new Exception("비밀번호가 일치하지 않습니다.");
+        // }
 
         user.update(userRequestDto,passwordEncoder);
         return new UserResponseDto(user);
