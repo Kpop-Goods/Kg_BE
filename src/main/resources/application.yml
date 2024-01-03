@@ -8,6 +8,9 @@ server:
       force: true
 
 spring:
+  redis:
+    host: localhost
+    port: 6379
   application:
     name: user-service
   main:
@@ -17,6 +20,9 @@ spring:
     url: jdbc:mysql://localhost:3306/kpop?createDatabaseIfNotExist=true
     username: root
     password: 1234
+  profiles:
+    active: local
+    include: oauth, jwt
 
   jpa:
     hibernate:

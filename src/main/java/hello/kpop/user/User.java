@@ -1,5 +1,6 @@
 package hello.kpop.user;
 
+import hello.kpop.user.dto.UserRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,26 +21,27 @@ import javax.validation.constraints.Size;
 @Table(name = "USER")
 public class User {
 
-    @Id
+    //회원 번호
+    @Id //pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId; // 유저 ID (PK)
-
     @Column
-    private String userName; // 이름
+    private Long userId;
 
-    @Email
-    @NotBlank(message = "이메일은 필수 입력값입니다.")
-    @Column(nullable = false, unique = true)
-    private String userEmail; // 이메일
+    //회원 이름
+    @Column
+    private String userName;
 
-    @NotBlank(message = "비밀번호는 필수 입력값입니다.")
-    @Column(nullable = false)
-    private String userPw; // 비밀번호
+    //회원 이메일
+    @Column
+    private String userEmail;
 
-    @Column(nullable = false, unique = true)
-    @NotBlank(message = "닉네임은 필수 입력값입니다.")
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$", message = "닉네임은 특수문자를 제외한 2~10자리여야 합니다.")
-    private String userNickname; // 닉네임
+    //회원 비밀번호
+    @Column
+    private String userPw;
+
+    //회원 닉네임
+    @Column
+    private String userNickname;
 
     @Column
     private String userImg; // 프로필 이미지
@@ -76,7 +78,30 @@ public class User {
         this.userPw = passwordEncoder.encode(updatePassword);
     }
 
+    //RefreshToken 재발급 메소드
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
+    }
+
+    public User(UserRequestDto requestDto) {
+        this.userName = requestDto.getUserName();
+        this.userEmail = requestDto.getUserEmail();
+        this.userPw = requestDto.getUserPw();
+        this.userNickname = requestDto.getUserNickname();
+        this.userImg = requestDto.getUserImg();
+        this.userFollowerCount = requestDto.getUserFollowerCount();
+    }
+
+    public void update(UserRequestDto requestDto, PasswordEncoder passwordEncoder) {
+        this.userName = requestDto.getUserName();
+        this.userEmail = requestDto.getUserEmail();
+        this.userNickname = requestDto.getUserNickname();
+        this.userImg = requestDto.getUserImg();
+        this.userFollowerCount = requestDto.getUserFollowerCount();
+
+        // 새로운 비밀번호가 null이 아니고, 기존 비밀번호와 다를 때만 인코딩하여 업데이트
+        if (requestDto.getUserPw() != null && !requestDto.getUserPw().equals(this.userPw)) {
+            this.userPw = passwordEncoder.encode(requestDto.getUserPw());
+        }
     }
 }
