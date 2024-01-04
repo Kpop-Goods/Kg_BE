@@ -1,4 +1,4 @@
-package hello.kpop.board.entity;
+package hello.kpop.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class Base {
+public  class Base {
 
     @CreatedDate
     @Column(updatable = false)

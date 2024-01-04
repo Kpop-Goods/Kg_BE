@@ -33,7 +33,14 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j' // MySQL 연결
     implementation 'org.springframework.boot:spring-boot-starter-validation' // 유효성 검사
     implementation 'org.springframework.boot:spring-boot-starter-security' // 스프링 시큐리티
+
+    //Swagger
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
 }
+
+
 
 tasks.named('test') {
     useJUnitPlatform()
