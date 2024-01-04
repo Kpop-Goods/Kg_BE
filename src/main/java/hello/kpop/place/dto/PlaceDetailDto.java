@@ -1,19 +1,13 @@
 package hello.kpop.place.dto;
 
-import hello.kpop.artist.Artist;
-import hello.kpop.place.Place;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 @NoArgsConstructor
 @Getter
-@Setter
-public class PlaceDto {
-
+public class PlaceDetailDto {
     private int placeCode;
     private Double latitude;
     private Double longitude;
@@ -24,6 +18,4 @@ public class PlaceDto {
     private int placeFollowerCount;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Long artistId;
-
 }
