@@ -106,9 +106,9 @@ public class UserController {
 
     // 유저 회원 탈퇴
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
-            UserSuccessResponseDto successResponseDto = userService.deleteUser(id, userRequestDto);
+            UserSuccessResponseDto successResponseDto = userService.deleteUser(id);
             CustomResponse successResponse = new CustomResponse();
             successResponse.setStatusCode(200);
             successResponse.setMessage("회원 탈퇴 성공");
