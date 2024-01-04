@@ -63,13 +63,13 @@ public class UserService {
 
     //유저 회원 탈퇴
     @Transactional
-    public UserSuccessResponseDto deleteUser(Long userId, UserRequestDto userRequestDto) throws Exception {
+    public UserSuccessResponseDto deleteUser(Long userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
-        if (!passwordEncoder.matches(userRequestDto.getUserPw(), user.getUserPw())) {
-            throw new Exception("비밀번호가 일치하지 않습니다.");
-        }
+//        if (!passwordEncoder.matches(password, user.getUserPw())) {
+//            throw new Exception("비밀번호가 일치하지 않습니다.");
+//        }
 
         userRepository.deleteById(userId);
         return new UserSuccessResponseDto(true);
