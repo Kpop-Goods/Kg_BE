@@ -11,10 +11,11 @@ public class PlaceDetailDto {
     private int placeCode;
     private Double latitude;
     private Double longitude;
-    private String name;
+    private String placeName;
     private String placeAddress;
     private String placeImg;
     private String placeContent;
+    private int placeFollowerCount;
     private LocalDate startDate;
     private LocalDate endDate;
 }

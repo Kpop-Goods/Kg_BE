@@ -5,6 +5,7 @@ import hello.kpop.artist.Artist;
 import hello.kpop.place.dto.PlaceDetailDto;
 import hello.kpop.place.dto.PlaceDto;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Data // -> getter랑 setter 역할까지 다 해줌
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "PLACES")
+@Table(name = "PLACE")
 @Builder
 public class Place {
 
@@ -36,9 +37,9 @@ public class Place {
     @Column(name = "longitude", nullable = false)
     private Double longitude;
 
-    //장소명(이벤트명)
+    //이벤트 명
     @Column(name = "placeName", nullable = false)
-    private String name;
+    private String placeName;
 
     //주소
     @Column(name = "placeAddress", nullable = false)
@@ -48,9 +49,14 @@ public class Place {
     @Column(name = "placeImg", nullable = false)
     private String placeImg; //이미지 경로
 
-    //장소 설명
+    //이벤트 설명
     @Column(name = "placeContent", columnDefinition = "TEXT", nullable = false)
     private String placeContent;
+
+    //장소 팔로우
+    @Column(name = "placeFollowerCount")
+    @ColumnDefault("0") //default
+    private int placeFollowerCount;
 
     //시작 날짜
     @Column(name = "startDate", nullable = false)
@@ -72,10 +78,11 @@ public class Place {
         this.placeCode = requestDto.getPlaceCode();
         this.latitude = requestDto.getLatitude();
         this.longitude = requestDto.getLongitude();
-        this.name = requestDto.getName();
+        this.placeName = requestDto.getPlaceName();
         this.placeAddress = requestDto.getPlaceAddress();
         this.placeImg = requestDto.getPlaceImg();
         this.placeContent = requestDto.getPlaceContent();
+        this.placeFollowerCount = requestDto.getPlaceFollowerCount();
         this.startDate = requestDto.getStartDate();
         this.endDate = requestDto.getEndDate();
         this.artist = artist;
@@ -85,10 +92,11 @@ public class Place {
         this.placeCode = detailRequestDto.getPlaceCode();
         this.latitude = detailRequestDto.getLatitude();
         this.longitude = detailRequestDto.getLongitude();
-        this.name = detailRequestDto.getName();
+        this.placeName = detailRequestDto.getPlaceName();
         this.placeAddress = detailRequestDto.getPlaceAddress();
         this.placeImg = detailRequestDto.getPlaceImg();
         this.placeContent = detailRequestDto.getPlaceContent();
+        this.placeFollowerCount = detailRequestDto.getPlaceFollowerCount();
         this.startDate = detailRequestDto.getStartDate();
         this.endDate = detailRequestDto.getEndDate();
     }
