@@ -1,17 +1,19 @@
 package hello.kpop.artist;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import hello.kpop.agency.Agency;
+import hello.kpop.artist.dto.ArtistDto;
+import hello.kpop.place.Place;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data // -> getter랑 setter 역할까지 다 해줌
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ARTIST")
 public class Artist {
 
@@ -31,4 +33,22 @@ public class Artist {
     @Column
     private int artistCount; // 팔로워수
 
+    //Agency 조인
+    @ManyToOne(fetch= FetchType.LAZY) //소속사는 여러 명의 아티스트를 가질 수 있음
+    @JoinColumn(name = "agencyId")
+    private Agency agency; // fk(=Agency_pk)
+
+    public Artist(ArtistDto requestDto) {
+        this.artistImg = requestDto.getArtistImg();
+        this.artistContent = requestDto.getArtistContent();
+        this.artistName = requestDto.getArtistName();
+        this.artistCount = requestDto.getArtistCount();
+    }
+
+    public void update(ArtistDto requestDto) {
+        this.artistImg = requestDto.getArtistImg();
+        this.artistContent = requestDto.getArtistContent();
+        this.artistName = requestDto.getArtistName();
+        this.artistCount = requestDto.getArtistCount();
+    }
 }

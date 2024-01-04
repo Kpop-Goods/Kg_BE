@@ -1,0 +1,13 @@
+# JWT 관련 설정 파일
+jwt:
+  # 서버가 가지고 있는 개인키로, 이 secretKey를 이용하여 JWT 생성 시 암호화를 진행한다.
+  # base64로 인코딩된 암호키, HS512를 사용할 것이기 때문에 512비트(64바이트) 이상이 되어야 한다.
+  secretKey: dasdasf234fuhvertsv34789yhiuFDSIUFGYDTE5rcomewithme5456empowerjourneys
+
+  access:
+    expiration: 3600000 # 액세스 토큰의 만료 시간(단위 : ms), 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    header: Authorization # 액세스 토큰이 담길 헤더의 이름(key)을 설정
+
+  refresh:
+    expiration: 1209600000 # 리프레시 토큰의 만료 시간(단위 : ms), 2주 (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
+    header: Authorization-refresh # 리프레시 토큰이 담길 헤더의 이름(key)을 설정
