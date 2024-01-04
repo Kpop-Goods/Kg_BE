@@ -33,6 +33,7 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j' // MySQL 연결
     implementation 'org.springframework.boot:spring-boot-starter-validation' // 유효성 검사
     implementation 'org.springframework.boot:spring-boot-starter-security' // 스프링 시큐리티
+    implementation 'org.hibernate:hibernate-core:5.4.33.Final' //hibernate 버전관리
 }
 
 tasks.named('test') {
