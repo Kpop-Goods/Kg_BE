@@ -2,58 +2,92 @@ package hello.kpop.user.service;
 
 import hello.kpop.user.Role;
 import hello.kpop.user.User;
-import hello.kpop.user.dto.UserSignUpDto;
+import hello.kpop.user.dto.UserRequestDto;
+import hello.kpop.user.dto.UserResponseDto;
+import hello.kpop.user.dto.UserSuccessResponseDto;
 import hello.kpop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-
-import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    // 회원가입 시, 유효성 체크
-    public Map<String, String> validateHandling(Errors errors) {
-        Map<String, String> validatorResult = new HashMap<>();
+    @Transactional
+    public UserResponseDto signUp(UserRequestDto userRequestDto) throws Exception {
 
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
-
-        return validatorResult;
-    }
-
-    public void signUp(UserSignUpDto userSignUpDto) throws Exception {
-
-        if (userRepository.findByUserEmail(userSignUpDto.getUserEmail()).isPresent()) {
+        if (userRepository.findByUserEmail(userRequestDto.getUserEmail()).isPresent()) {
             throw new Exception("이미 존재하는 이메일입니다.");
         }
 
-        if (userRepository.findByUserNickname(userSignUpDto.getUserNickname()).isPresent()) {
+        if (userRepository.findByUserNickname(userRequestDto.getUserNickname()).isPresent()) {
             throw new Exception("이미 존재하는 닉네임입니다.");
         }
 
         User user = User.builder()
-                .userName(userSignUpDto.getUserName())
-                .userEmail(userSignUpDto.getUserEmail())
-                .userPw(userSignUpDto.getUserPw())
-                .userNickname(userSignUpDto.getUserNickname())
+                .userName(userRequestDto.getUserName())
+                .userEmail(userRequestDto.getUserEmail())
+                .userPw(userRequestDto.getUserPw())
+                .userNickname(userRequestDto.getUserNickname())
                 .role(Role.USER)
                 .build();
 
         user.passwordEncode(passwordEncoder);
         userRepository.save(user);
+        return new UserResponseDto(user);
+    }
+
+    //유저 회원정보 수정
+    @Transactional
+    public UserResponseDto updateUser(Long userId, UserRequestDto userRequestDto) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+
+        // // 사용자가 입력한 비밀번호를 암호화하여 저장된 비밀번호와 비교합니다.
+        // if (!passwordEncoder.matches(userRequestDto.getUserPw(), user.getUserPw())) {
+        //     throw new Exception("비밀번호가 일치하지 않습니다.");
+        // }
+
+        user.update(userRequestDto,passwordEncoder);
+        return new UserResponseDto(user);
+    }
+
+    //유저 회원 탈퇴
+    @Transactional
+    public UserSuccessResponseDto deleteUser(Long userId, UserRequestDto userRequestDto) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+
+        if (!passwordEncoder.matches(userRequestDto.getUserPw(), user.getUserPw())) {
+            throw new Exception("비밀번호가 일치하지 않습니다.");
+        }
+
+        userRepository.deleteById(userId);
+        return new UserSuccessResponseDto(true);
+    }
+
+    // 로그아웃
+    @Transactional
+    public void logout(Authentication authentication) {
+        String email = authentication.getName();
+        System.out.println("이메일: " + email);
+
+        if (redisTemplate.hasKey(email)) {
+            redisTemplate.delete(email); // 해당 키가 존재하면 삭제
+            System.out.println("토큰 삭제됨");
+        } else {
+            System.out.println("토큰이 존재하지 않음");
+        }
+        // 여기에 사용자 정보 확인하는 코드가 있었을 텐데 삭제하세요.
     }
 }
 

@@ -8,9 +8,13 @@ server:
       force: true
 
 spring:
+  redis:
+    host: localhost
+    port: 6379
   # 프로필 설정
   profiles:
     active: dev
+    include: oauth, jwt
   application:
     name: user-service
   main:
