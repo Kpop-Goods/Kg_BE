@@ -46,8 +46,7 @@ public class BoardService {
 
     // 게시판 하나 조회
     public BoardResponseDto findBoard(Long id) {
-        NoticeBoard board = boardRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("조회 실패")
+        NoticeBoard board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("조회 실패")
         );
         return new BoardResponseDto(board);
     }
@@ -55,8 +54,7 @@ public class BoardService {
     // 게시글 수정
     @Transactional
     public BoardResponseDto updateBoard(Long id, BoardRequestDto requestDto){
-        NoticeBoard board = boardRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디값이 없습니다")
+        NoticeBoard board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("아이디값이 없습니다")
         );
 
         board.modifyBoardInfo(requestDto);

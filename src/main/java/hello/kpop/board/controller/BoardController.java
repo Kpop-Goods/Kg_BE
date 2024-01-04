@@ -29,8 +29,8 @@ public class BoardController {
     // 전체 목록 조회
     @GetMapping("/list")
     public ResponseEntity<List<BoardListResponseDto>> getAllBoards() {
-        List<BoardListResponseDto> boards = boardService.findAllBoard();
-        return new ResponseEntity<>(boards, HttpStatus.OK);
+        List<BoardListResponseDto> boardlist = boardService.findAllBoard();
+        return new ResponseEntity<>(boardlist, HttpStatus.OK);
     }
 
     // 게시글 하나 조회
