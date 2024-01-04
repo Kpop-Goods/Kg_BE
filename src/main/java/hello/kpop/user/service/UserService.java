@@ -67,10 +67,6 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
-//        if (!passwordEncoder.matches(password, user.getUserPw())) {
-//            throw new Exception("비밀번호가 일치하지 않습니다.");
-//        }
-
         userRepository.deleteById(userId);
         return new UserSuccessResponseDto(true);
     }
