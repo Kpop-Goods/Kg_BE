@@ -34,6 +34,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation' // 유효성 검사
 
     implementation 'org.springframework.boot:spring-boot-starter-security' // 스프링 시큐리티
+
+
+    //Swagger
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
     implementation 'org.hibernate:hibernate-core:5.4.33.Final' //hibernate 버전관리
 
     implementation 'org.springframework.security:spring-security-oauth2-client:5.5.2'
@@ -48,7 +54,10 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+
 }
+
+
 
 tasks.named('test') {
     useJUnitPlatform()
