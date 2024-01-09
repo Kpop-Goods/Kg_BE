@@ -22,13 +22,13 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/kpop?createDatabaseIfNotExist=true
-    username: root
-    password: 87654321
+    url: jdbc:mysql://k-pop-db.crrslruyikoi.ap-northeast-2.rds.amazonaws.com:3306/kpop?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: admin
+    password: 12345678
 
   jpa:
     hibernate:
-      ddl-auto: create #create update none
+      ddl-auto: none #create update none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
@@ -52,3 +52,7 @@ spring:
   neo4j:
     authentication:
       username:
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
