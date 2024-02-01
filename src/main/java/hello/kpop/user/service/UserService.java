@@ -29,16 +29,16 @@ public class UserService {
             throw new Exception("이미 존재하는 이메일입니다.");
         }
 
-        if (userRepository.findByUserNickname(userRequestDto.getUserNickname()).isPresent()) {
+        if (userRepository.findByNickname(userRequestDto.getNickname()).isPresent()) {
             throw new Exception("이미 존재하는 닉네임입니다.");
         }
 
         User user = User.builder()
                 .userName(userRequestDto.getUserName())
                 .userEmail(userRequestDto.getUserEmail())
-                .userPw(userRequestDto.getUserPw())
-                .userNickname(userRequestDto.getUserNickname())
-                .role(Role.USER)
+                .password(userRequestDto.getPassword())
+                .nickname(userRequestDto.getNickname())
+                .userType(Role.USER)
                 .build();
 
         user.passwordEncode(passwordEncoder);
@@ -48,8 +48,8 @@ public class UserService {
 
     //유저 회원정보 수정
     @Transactional
-    public UserResponseDto updateUser(Long userId, UserRequestDto userRequestDto) throws Exception {
-        User user = userRepository.findById(userId).orElseThrow(
+    public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) throws Exception {
+        User user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
         // // 사용자가 입력한 비밀번호를 암호화하여 저장된 비밀번호와 비교합니다.
@@ -63,11 +63,11 @@ public class UserService {
 
     //유저 회원 탈퇴
     @Transactional
-    public UserSuccessResponseDto deleteUser(Long userId) throws Exception {
-        User user = userRepository.findById(userId).orElseThrow(
+    public UserSuccessResponseDto deleteUser(Long id) throws Exception {
+        User user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
-        userRepository.deleteById(userId);
+        userRepository.deleteById(id);
         return new UserSuccessResponseDto(true);
     }
 

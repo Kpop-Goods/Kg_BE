@@ -11,24 +11,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResponseDto {
 
-    private Long userId;
+    private Long id;
     private String userName;
     private String userEmail;
-    private String userNickname;
-    private String userImg;
-    private int userFollowerCount;
-    private Role role;
+    private String nickname;
+    private Role userType;
     private SocialType socialType;
     private String socialId;
 
     public UserResponseDto(User entity) {
-        this.userId = entity.getUserId();
+        this.id = entity.getId();
         this.userName = entity.getUserName();
         this.userEmail = entity.getUserEmail();
-        this.userNickname = entity.getUserNickname();
-        this.userImg = entity.getUserImg();
-        this.userFollowerCount = entity.getUserFollowerCount();
-        this.role = entity.getRole();
+        this.nickname = entity.getNickname();
+        this.userType = entity.getUserType();
         this.socialType = entity.getSocialType();
         this.socialId = entity.getSocialId();
     }
