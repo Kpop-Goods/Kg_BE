@@ -83,7 +83,6 @@ public class UserService {
         } else {
             System.out.println("토큰이 존재하지 않음");
         }
-        // 여기에 사용자 정보 확인하는 코드가 있었을 텐데 삭제하세요.
     }
 }
 
