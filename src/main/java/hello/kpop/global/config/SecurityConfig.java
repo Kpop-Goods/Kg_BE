@@ -65,6 +65,7 @@ public class SecurityConfig {
                 .antMatchers("/user/userSignUp").permitAll()
                 .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
                 .antMatchers("/user/**").permitAll() // 회원가입 접근 가능
+                .antMatchers("/email/**").permitAll() // 이메일 접근 가능
                 .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .and()
 
