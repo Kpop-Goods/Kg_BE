@@ -1,23 +1,46 @@
 package hello.kpop.calendar;
 
-import hello.kpop.artist.Artist;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
+
 @NoArgsConstructor
 @Getter
+@Setter
+@Schema(description = "Calendar Common Data Transfer Object(DTO)") // not using "name=" field
 public class CalendarDto {
 
-    private Long id; // id (pk)
-    private Artist artist; // artist id (fk)
+    @Schema(example = "100", description = "unique primary key number for Calendar table")
+    private Long id;
+    @Schema(example = "100", description = "unique foreign key number by Artist table")
+//  private Artist artist; // artist id (fk)
+    private Long artistId;
 
-    private String name; // name
+    @Schema(example = "Fan Meeting", description = "Schedule's name")
+    private String name;
 
-    private Date start; // start date, time
-    private Date end; // end date, time
+    @Schema(example = "2021/12/24 23:59:59", description = "Start of schedule including date & time")
+    private Date start;
+    @Schema(example = "2021/12/25 00:00:01", description = "Start of schedule including date & time")
+    private Date end;
 
-    private String link; // external link
-    private String meta; // meta data
+    @Schema(example = "http://christmas.org", description = "external link string for schedule")
+    private String link;
+    @Schema(example = "nothing", description = "meta data, reserved for expansion")
+    private String meta;
+
+    CalendarDto(Calendar cal) {
+        id = cal.getId();
+        artistId = cal.getArtist().getArtistId();
+        name = cal.getName();
+        start = cal.getStart();
+        end = cal.getEnd();
+        link = cal.getLink();
+        meta = cal.getMeta();
+    }
 }
