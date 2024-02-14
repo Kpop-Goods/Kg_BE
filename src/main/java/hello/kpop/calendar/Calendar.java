@@ -1,10 +1,7 @@
 package hello.kpop.calendar;
 
 import hello.kpop.artist.Artist;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +9,7 @@ import java.util.Date;
 @Entity
 //@Data // -> @Getter + @Setter
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,10 +32,14 @@ public class Calendar {
     private Date start; // start date, time
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "end", nullable = false)
+    @Column(name = "ended", nullable = false)
     private Date end;
 
     @Column
     private String link; // external URL
     private String meta; // reserved
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+    }
 }
