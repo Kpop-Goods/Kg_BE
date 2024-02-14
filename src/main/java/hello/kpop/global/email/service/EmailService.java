@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class EmailService {
@@ -57,5 +58,29 @@ public class EmailService {
     private String generateVerificationToken() {
         // 인증번호 생성 로직 구현 (랜덤 문자열 생성)
         return RandomStringUtils.randomAlphanumeric(6); // 예시로 6자리 랜덤 문자열 생성
+    }
+
+    // 비밀번호 재설정 토큰을 생성하고 이메일로 전송하는 메서드
+    public void sendPasswordResetEmail(String toEmail) throws MessagingException {
+        String subject = "비밀번호 재설정";
+        String token = generatePasswordResetToken();
+
+        // 이메일에 비밀번호 재설정 링크 포함
+        String text = "비밀번호를 재설정하려면 다음 링크를 클릭하세요: " + baseUrl + "/reset-password?token=" + token;
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject(subject);
+        message.setText(text);
+
+        javaMailSender.send(message);
+
+        // 생성된 토큰을 Redis에 저장하고 만료 시간 설정
+        redisTemplate.opsForValue().set(token, toEmail, 15, TimeUnit.MINUTES);
+    }
+
+    // 비밀번호 재설정 토큰 생성 메서드
+    private String generatePasswordResetToken() {
+        return RandomStringUtils.randomAlphanumeric(20); // 예시로 20자리 랜덤 문자열 생성
     }
 }

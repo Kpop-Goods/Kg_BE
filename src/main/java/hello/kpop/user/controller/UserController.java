@@ -6,6 +6,9 @@ import hello.kpop.user.dto.UserResponseDto;
 import hello.kpop.user.dto.UserSuccessResponseDto;
 import hello.kpop.user.handler.CustomResponse;
 import hello.kpop.user.handler.exception.DuplicateEmailException;
+import hello.kpop.user.handler.exception.DuplicatePasswordException;
+import hello.kpop.user.handler.exception.InvalidTokenException;
+import hello.kpop.user.handler.exception.UserNotFoundException;
 import hello.kpop.user.repository.UserRepository;
 import hello.kpop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -38,12 +41,12 @@ public class UserController {
             }
 
             CustomResponse customResponse = new CustomResponse();
-            customResponse.setStatusCode(422);
+            customResponse.setStatusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
             customResponse.setMessage("유효성 검사 실패");
             customResponse.setData(errors);
             return ResponseEntity.unprocessableEntity().body(customResponse);
         }
-        return null;  // 유효성 검사 에러가 없는 경우, null 반환
+        return null;
     }
 
     // 예외 처리 및 응답 생성
@@ -67,62 +70,81 @@ public class UserController {
         return ResponseEntity.status(errorStatus).body(customResponse);
     }
 
-    // 회원가입
+    // 회원가입 API
     @PostMapping("/userSignUp")
     public ResponseEntity<?> signUp(@RequestBody @Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
         ResponseEntity<CustomResponse> validationResponse = handleValidationErrors(bindingResult);
         if (validationResponse != null) {
-            return validationResponse;  // 유효성 검사 에러가 있는 경우, 해당 응답 반환
+            return validationResponse;
         }
 
         try {
-            Optional<User> existingUserOptional = userRepository.findByUserEmail(userRequestDto.getUserEmail());
-            if (existingUserOptional.isPresent()) {
-                throw new DuplicateEmailException("중복된 이메일입니다.");
-            }
-
-            UserResponseDto responseDto = userService.signUp(userRequestDto);
-            return ResponseEntity.ok(handleResponse(null, HttpStatus.OK, "회원가입 성공", responseDto).getBody());
+            userService.signUp(userRequestDto);
+            return ResponseEntity.ok().body(new CustomResponse(HttpStatus.OK.value(), "회원가입 성공", null));
+        } catch (DuplicateEmailException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomResponse(400, e.getMessage(), null));
         } catch (Exception e) {
-            return ResponseEntity.ok(handleResponse(e, HttpStatus.INTERNAL_SERVER_ERROR, "회원가입 실패", null).getBody());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomResponse(500, "회원가입 실패", null));
         }
     }
 
-    // 유저 회원정보 수정
+    // 유저 회원정보 수정 API
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
         ResponseEntity<CustomResponse> validationResponse = handleValidationErrors(bindingResult);
         if (validationResponse != null) {
-            return validationResponse;  // 유효성 검사 에러가 있는 경우, 해당 응답 반환
+            return validationResponse;
         }
 
         try {
-            UserResponseDto responseDto = userService.updateUser(id, userRequestDto);
-            return ResponseEntity.ok(handleResponse(null, HttpStatus.OK, "회원정보 수정 성공", responseDto).getBody());
+            userService.updateUser(id, userRequestDto);
+            return ResponseEntity.ok().body(new CustomResponse(HttpStatus.OK.value(), "회원정보 수정 성공", null));
         } catch (Exception e) {
-            return ResponseEntity.ok(handleResponse(e, HttpStatus.INTERNAL_SERVER_ERROR, "회원정보 수정 실패", null).getBody());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomResponse(500, "회원정보 수정 실패", null));
         }
     }
 
-    // 유저 회원 탈퇴
+    // 유저 회원 탈퇴 API
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
-            UserSuccessResponseDto successResponseDto = userService.deleteUser(id);
-            return ResponseEntity.ok(handleResponse(null, HttpStatus.OK, "회원 탈퇴 성공", successResponseDto).getBody());
+            userService.deleteUser(id);
+            return ResponseEntity.ok().body(new CustomResponse(HttpStatus.OK.value(), "회원 탈퇴 성공", null));
         } catch (Exception e) {
-            return ResponseEntity.ok(handleResponse(e, HttpStatus.INTERNAL_SERVER_ERROR, "회원 탈퇴 실패", null).getBody());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomResponse(500, "회원 탈퇴 실패", null));
         }
     }
 
-    // 로그아웃
+    // 로그아웃 API
     @PostMapping(value = "/logout")
     public ResponseEntity<?> logout(Authentication authentication) {
         try {
             userService.logout(authentication);
-            return ResponseEntity.ok(handleResponse(null, HttpStatus.OK, "로그아웃 성공", null).getBody());
+            return ResponseEntity.ok().body(new CustomResponse(HttpStatus.OK.value(), "로그아웃 성공", null));
         } catch (Exception e) {
-            return ResponseEntity.ok(handleResponse(e, HttpStatus.INTERNAL_SERVER_ERROR, "로그아웃 실패", null).getBody());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomResponse(500, "로그아웃 실패", null));
         }
     }
+
+    // 비밀번호 재설정 확인 API
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        String token = payload.get("token");
+        String newPassword = payload.get("newPassword");
+
+        try {
+            userService.resetPassword(email, token, newPassword);
+            return ResponseEntity.ok("비밀번호가 성공적으로 재설정되었습니다.");
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        } catch (InvalidTokenException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+        } catch (DuplicatePasswordException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("새로운 비밀번호는 이전 비밀번호와 달라야 합니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 재설정에 실패했습니다. " + e.getMessage());
+        }
+    }
+
 }
