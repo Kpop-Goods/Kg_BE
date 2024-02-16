@@ -7,7 +7,7 @@ import hello.kpop.place.dto.PlaceDto;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity

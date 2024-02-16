@@ -20,6 +20,8 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,33 +49,34 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .formLogin().disable() // FormLogin 사용 X
-                .httpBasic().disable() // httpBasic 사용 X
-                .csrf().disable() // csrf 보안 사용 X
-                .headers().frameOptions().disable()
-                .and()
+                .formLogin(f->f.disable()) // FormLogin 사용 X
+                .httpBasic(h -> h.disable()) //HTTP 기본 인증을 비활성화
+                .csrf(AbstractHttpConfigurer::disable) //CSRF 보호 기능 비활성화
+                .headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 
                 // 세션 사용하지 않으므로 STATELESS로 설정
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .sessionManagement((sessionManagement) ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                ) //세션관리 정책을 STATELESS(세션이 있으면 쓰지도 않고, 없으면 만들지도 않는다)
+
 
                 //== URL별 권한 관리 옵션 ==//
-                .authorizeRequests()
-
-                // 아이콘, css, js 관련
-                // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
-                .antMatchers("/user/userSignUp").permitAll()
-                .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
-                .antMatchers("/user/**").permitAll() // 회원가입 접근 가능
-                .antMatchers("/email/**").permitAll() // 이메일 접근 가능
-                .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
-                .and()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user/userSignUp").permitAll()
+                        // 아이콘, css, js 관련
+                        // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
+                        .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
+                        .requestMatchers("/user/**").authenticated()
+                        .requestMatchers("/email/**").authenticated()
+                        .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
 
                 //== 소셜 로그인 설정 ==//
-                .oauth2Login()
-                .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 Handler 설정
-                .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러 설정
-                .userInfoEndpoint().userService(customOAuth2UserService); // customUserService 설정
+                .oauth2Login((oauth2) -> oauth2 // OAuth2 로그인 설정시작
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                                .userService(customOAuth2UserService)) //OAuth 로그인 시 사용자 정보를 가져오는 엔드포인트와 사용자 서비스를 설정
+                        .failureHandler(oAuth2LoginFailureHandler)
+                        .successHandler(oAuth2LoginSuccessHandler));
+
 
         // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
         // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
