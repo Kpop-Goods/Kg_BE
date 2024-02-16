@@ -4,9 +4,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
 public class TokenValidator {
 
     private static final String SECRET_KEY = "dasdasf234fuhvertsv34789yhiuFDSIUFGYDTE5rcomewithme5456empowerjourneys";

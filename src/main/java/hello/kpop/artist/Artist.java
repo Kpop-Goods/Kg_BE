@@ -5,7 +5,7 @@ import hello.kpop.artist.dto.ArtistDto;
 import hello.kpop.place.Place;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

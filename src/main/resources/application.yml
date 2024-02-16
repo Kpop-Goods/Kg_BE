@@ -8,9 +8,6 @@ server:
       force: true
 
 spring:
-  redis:
-    host: localhost
-    port: 6379
   # 프로필 설정
   profiles:
     active: dev
@@ -36,6 +33,10 @@ spring:
           auth: true
           starttls:
             enable: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   jpa:
     hibernate:
@@ -47,7 +48,7 @@ spring:
       hibernate:
         format_sql: true
 
-# neo4j
+  # neo4j
   spring:
     neo4j:
       uri: bolt://52.78.7.199:7687

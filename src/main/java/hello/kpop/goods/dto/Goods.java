@@ -5,7 +5,7 @@ import hello.kpop.board.dto.Base;
 import hello.kpop.user.User;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Data

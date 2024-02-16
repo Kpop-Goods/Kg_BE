@@ -2,7 +2,7 @@ package hello.kpop.agency;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Data // -> getter랑 setter 역할까지 다 해줌

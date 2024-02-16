@@ -3,7 +3,7 @@ package hello.kpop.calendar;
 import hello.kpop.artist.Artist;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
