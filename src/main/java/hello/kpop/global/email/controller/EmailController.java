@@ -49,4 +49,18 @@ public class EmailController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("인증 처리 중에 오류가 발생했습니다.");
         }
     }
+
+    // 비밀번호 재설정 이메일 전송 API
+    @PostMapping("/send-password-reset-email")
+    public ResponseEntity<String> sendPasswordResetEmail(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+
+        try {
+            // 비밀번호 재설정 이메일 전송 기능 호출
+            emailService.sendPasswordResetEmail(email);
+            return ResponseEntity.ok("비밀번호 재설정 이메일이 성공적으로 전송되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 재설정 이메일 전송에 실패했습니다.");
+        }
+    }
 }

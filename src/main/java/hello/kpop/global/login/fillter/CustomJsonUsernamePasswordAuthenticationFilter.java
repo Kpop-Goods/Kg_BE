@@ -28,7 +28,7 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
     private static final String HTTP_METHOD = "POST"; //로그인 HTTP 메소드는 POST
     private static final String CONTENT_TYPE = "application/json"; //JSON 타입의 데이터로 오는 로그인 요청만 처리
     private static final String USERNAME_KEY = "userEmail"; //회원 로그인 시 이메일 요청 Json Key : "email"
-    private static final String PASSWORD_KEY = "userPw"; //회원 로그인 시 비밀번호 요청 Json Key : "password"
+    private static final String PASSWORD_KEY = "password"; //회원 로그인 시 비밀번호 요청 Json Key : "password"
     private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCHER =
             new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD); //"/login" + POST 로 온 요청에 매칭된다.
 
@@ -84,10 +84,10 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
         Map<String, String> usernamePasswordMap = objectMapper.readValue(messageBody, Map.class);
 
         String userEmail = usernamePasswordMap.get(USERNAME_KEY);
-        String userPw = usernamePasswordMap.get(PASSWORD_KEY);
+        String password = usernamePasswordMap.get(PASSWORD_KEY);
 
         //UsernamePasswordAuthenticationToken객체는 인증 처리 객체인 AuthenticationManager가 인증 시 사용할 인증 대상 객체가 된다.
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userEmail, userPw); //email이 인증 대상 객체의 principal, password가 인증 대상 객체의 credentials가 된다.
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userEmail, password); //email이 인증 대상 객체의 principal, password가 인증 대상 객체의 credentials가 된다.
         return this.getAuthenticationManager().authenticate(authRequest); //인증 처리 객체인 AuthenticationManager가 인증 성공/인증 실패 처리를 하게 된다.
     }
 }

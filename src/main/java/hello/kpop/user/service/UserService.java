@@ -84,5 +84,32 @@ public class UserService {
             System.out.println("토큰이 존재하지 않음");
         }
     }
+
+    // 비밀번호 재설정 메서드
+    @Transactional
+    public void resetPassword(String email, String token, String newPassword) throws Exception {
+        // 이메일과 토큰을 사용하여 사용자를 확인
+        User user = userRepository.findByUserEmail(email)
+                .orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
+
+        // 토큰이 맞는지 확인
+        String storedEmail = redisTemplate.opsForValue().get(token);
+        if (storedEmail == null || !storedEmail.equals(email)) {
+            throw new Exception("유효하지 않은 토큰입니다.");
+        }
+
+        // 새로운 비밀번호와 이전 비밀번호가 다른지 확인
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new Exception("새로운 비밀번호는 이전 비밀번호와 다르게 설정해야 합니다.");
+        }
+
+        // 새로운 비밀번호로 암호화하여 저장
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+
+        // 업데이트 후에는 사용된 토큰은 삭제
+        redisTemplate.delete(token);
+    }
 }
 
