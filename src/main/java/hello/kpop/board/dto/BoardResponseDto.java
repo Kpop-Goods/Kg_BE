@@ -17,8 +17,8 @@ public class BoardResponseDto {
     private String type;
     private String content;
     private String imgUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private LocalDateTime reg_dt;
+    private LocalDateTime mod_dt;
 
 
 
@@ -28,7 +28,7 @@ public class BoardResponseDto {
         this.content = noticeBoard.getContent();
         this.type = noticeBoard.getType();
         this.imgUrl = noticeBoard.getImgUrl();
-        this.createdAt = noticeBoard.getCreatedAt();
-        this.modifiedAt = noticeBoard.getModifiedAt();
+        this.reg_dt = noticeBoard.getReg_dt();
+        this.mod_dt = noticeBoard.getMod_dt();
     }
 }

@@ -22,11 +22,11 @@ public  class Base {
     @CreatedDate
     @Column(updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdAt;// 생성일자
+    private LocalDateTime reg_dt;// 생성일자
 
     @LastModifiedDate
     @Column(insertable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime modifiedAt; //수정 일자
+    private LocalDateTime mod_dt; //수정 일자
 }
 

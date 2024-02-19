@@ -18,7 +18,7 @@ public class BoardListResponseDto{
     private Long noticeId;
     private String subject;
     private User userId;
-    private LocalDateTime createdAt;
+    private LocalDateTime reg_dt;
 
 
 
@@ -28,7 +28,7 @@ public class BoardListResponseDto{
         this.noticeId = noticeBoard.getNoticeId();
         this.userId=noticeBoard.getUserId();
         this.subject=noticeBoard.getSubject();
-        this.createdAt = noticeBoard.getCreatedAt();
+        this.reg_dt = noticeBoard.getReg_dt();
 
     }
 }
