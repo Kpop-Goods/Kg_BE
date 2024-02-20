@@ -23,15 +23,15 @@ public class SocialingRequestDto {
 
     private Long artistId; //아티스트 코드
 
-    @NotBlank( message = "제목을 입력해주세요")
+    @NotBlank
     private String socialing_name; //제목
 
     private String socialing_content;// 내용
 
-    @NotBlank(message = "타입을 적어주세요")
+    @NotBlank
     private String type; //소셜링 타입
 
-    @NotBlank(message = "장소를 입력해주세요")
+    @NotBlank
     private String social_place;// 장소
 
 

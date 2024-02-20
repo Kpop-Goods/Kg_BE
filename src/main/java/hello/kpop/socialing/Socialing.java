@@ -68,8 +68,6 @@ public class Socialing extends Base {
     @Enumerated(EnumType.STRING)
     private SocialingStatus del_yn=RECRUIT; // 사용 여부
 
-    @Column
-    private String imgUrl; // 사진 (추가)
 
 
 
@@ -86,7 +84,6 @@ public class Socialing extends Base {
         this.count =socialingRequestDto.getCount();
         this.del_yn = socialingRequestDto.getDel_yn();
         this.social_place = socialingRequestDto.getSocial_place();
-        this.imgUrl = socialingRequestDto.getImgUrl();
     }
 
     //업데이트용 메서드
@@ -100,7 +97,6 @@ public class Socialing extends Base {
         this.chat_url = socialingRequestDto.getChat_url();
         this.del_yn = socialingRequestDto.getDel_yn();
         this.social_place = socialingRequestDto.getSocial_place();
-        this.imgUrl = socialingRequestDto.getImgUrl();
     }
 
 

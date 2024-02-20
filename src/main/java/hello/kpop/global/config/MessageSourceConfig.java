@@ -10,8 +10,8 @@ public class MessageSourceConfig {
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
+        ms.setDefaultEncoding("UTF-8");
         ms.setBasenames("messages.validations", "messages.errors");
-        ms.setUseCodeAsDefaultMessage(true);
 
         return ms;
     }

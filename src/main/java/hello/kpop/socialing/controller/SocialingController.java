@@ -34,10 +34,9 @@ public class SocialingController  {
         // 토큰 추출
         String token = extractToken(authorizationHeader);
         System.out.println(token);
-
         if (!authenticationService.isUserLoggedIn(token)) {
             // 사용자가 인증되어 있지 않은 경우
-            return new ResponseJSONData<>(null, "회원 전용 서비스입니다.");
+            return new ResponseJSONData<>(false,HttpStatus.UNAUTHORIZED,null, "회원 전용 서비스입니다.");
         }
         SocialingResponseDto socialingResponseDto = saveService.createSocial(requestDto, bindingResult);
         return new ResponseJSONData<>(socialingResponseDto, "등록 성공");
@@ -47,13 +46,7 @@ public class SocialingController  {
         // "Bearer <token>" 형태의 헤더에서 토큰 부분 추출
         return authorizationHeader.replace("Bearer ", "");
     }
-//    @PostMapping
-//    public ResponseJSONData<Object> createSocial(@RequestBody @Valid SocialingRequestDto requestDto, BindingResult bindingResult) {
-//
-//        SocialingResponseDto socialingResponseDto = saveService.createSocial(requestDto, bindingResult);
-//
-//        return new ResponseJSONData<>(socialingResponseDto, "등록 성공");
-//    }
+
     //소셜 전체 조회
     @GetMapping("/list")
     public ListData<Socialing> findSocialList(SocialingSearchDto searchDto) {

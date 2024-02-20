@@ -22,17 +22,22 @@ public class ProcessUtils {
     }
     //bundle 타입에 따라서 나오는 값이 바뀌게
     public static String getMessage(String code, String bundleType) {
-        bundleType = StringUtils.hasText(bundleType) ? bundleType : "validations";
+        try {
+            bundleType = StringUtils.hasText(bundleType) ? bundleType : "validations";
 
-        ResourceBundle bundle = null;
+            ResourceBundle bundle = null;
 
-        if (bundleType.equals("errors")) {
-            bundle = errorsBundle;
-        } else {
-            bundle = validationsBundle;
+            if (bundleType.equals("errors")) {
+                bundle = errorsBundle;
+            } else {
+                bundle = validationsBundle;
+            }
+
+            return bundle.getString(code);
+        } catch(Exception e){
+            e.printStackTrace();
+            return "";
         }
-
-        return bundle.getString(code);
     }
 
     public static int onlyPositiveNumber(int num, int replace) {
