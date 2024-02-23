@@ -27,9 +27,7 @@ public class SocialingSaveService {
     public SocialingResponseDto createSocial(SocialingRequestDto socialingDto, BindingResult bindingResult) {
 
         socialingValidator.validate(socialingDto , bindingResult);
-//        if(bindingResult.hasErrors()){
-//            System.out.println("에러는"+bindingResult);
-//        }
+
         Socialing socialing = new Socialing(socialingDto);
         socialingRepository.save(socialing);
         return new SocialingResponseDto(socialing);

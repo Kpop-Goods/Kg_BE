@@ -7,7 +7,12 @@ import org.springframework.util.StringUtils;
 
 import java.util.ResourceBundle;
 
-//공통 에러 처리 부분
+/**
+ * 공통 예외
+ *
+ * 상태 코드와 예외 메세지 함께 처리 가능한 예외
+ * 모든 예외의 기준이 되는 예외이며 모든 예외가 상속 받아야 합니다.
+ */
 @Component
 @RequiredArgsConstructor
 public class ProcessUtils {

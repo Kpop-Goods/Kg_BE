@@ -3,6 +3,7 @@ package hello.kpop.socialing.controller;
 import hello.kpop.socialing.Socialing;
 import hello.kpop.socialing.common.ListData;
 import hello.kpop.socialing.common.ResponseJSONData;
+import hello.kpop.socialing.dto.SocialViewData;
 import hello.kpop.socialing.dto.SocialingRequestDto;
 import hello.kpop.socialing.dto.SocialingResponseDto;
 import hello.kpop.socialing.dto.SocialingSearchDto;
@@ -32,12 +33,12 @@ public class SocialingController  {
     @PostMapping
     public ResponseJSONData<Object> createSocial(@RequestBody @Valid SocialingRequestDto requestDto, BindingResult bindingResult, @RequestHeader("Authorization") String authorizationHeader) {
         // 토큰 추출
-        String token = extractToken(authorizationHeader);
-        System.out.println(token);
-        if (!authenticationService.isUserLoggedIn(token)) {
-            // 사용자가 인증되어 있지 않은 경우
-            return new ResponseJSONData<>(false,HttpStatus.UNAUTHORIZED,null, "회원 전용 서비스입니다.");
-        }
+//        String token = extractToken(authorizationHeader);
+//        System.out.println(token);
+//        if (!authenticationService.isUserLoggedIn(token)) {
+//            // 사용자가 인증되어 있지 않은 경우
+//            return new ResponseJSONData<>(false,HttpStatus.UNAUTHORIZED,null, "회원 전용 서비스입니다.");
+//        }
         SocialingResponseDto socialingResponseDto = saveService.createSocial(requestDto, bindingResult);
         return new ResponseJSONData<>(socialingResponseDto, "등록 성공");
     }
@@ -57,9 +58,9 @@ public class SocialingController  {
     //소셜 단일 조회
     @GetMapping("/view/{id}")
     public ResponseJSONData<Object> findSocial(@PathVariable Long id) {
-        SocialingResponseDto socialingResponseDto = infoService.findSocial(id);
         infoService.socialingViewCount(id); // 조회수 업데이트
-        return new ResponseJSONData<>(socialingResponseDto, "소셜링 단일 조회 성공");
+        SocialViewData socialViewData = infoService.findSocialAndList(id);
+        return new ResponseJSONData<>(socialViewData, "소셜링 단일 조회 성공");
     }
 
     //소셜 수정

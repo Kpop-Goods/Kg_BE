@@ -2,19 +2,15 @@ package hello.kpop.artist;
 
 import hello.kpop.agency.Agency;
 import hello.kpop.artist.dto.ArtistDto;
-import hello.kpop.place.Place;
-import lombok.*;
-
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.*;
 
 @Entity
 @Data // -> getter랑 setter 역할까지 다 해줌
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "ARTIST")
+@Table(name = "artist")
 public class Artist {
 
     @Id

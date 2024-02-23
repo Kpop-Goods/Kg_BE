@@ -2,7 +2,7 @@ package hello.kpop.socialing.common;
 
 import org.springframework.http.HttpStatus;
 
-//공통 익셉션
+
 public class CommonException extends RuntimeException {
     private HttpStatus status;
 

@@ -1,15 +1,14 @@
 package hello.kpop.socialing.dto;
 
+import hello.kpop.artist.Artist;
 import hello.kpop.socialing.SocialingStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 //요청 데이터
 @AllArgsConstructor
@@ -21,7 +20,7 @@ public class SocialingRequestDto {
 
     private Long userId; // 등록한 유저 아이디
 
-    private Long artistId; //아티스트 코드
+    private Artist artist_name; //아티스트 이름
 
     @NotBlank
     private String socialing_name; //제목
@@ -34,31 +33,27 @@ public class SocialingRequestDto {
     @NotBlank
     private String social_place;// 장소
 
+   // @NotBlank
+    private LocalDateTime start_date; // 시작일자
 
-    private Date start_date; // 시작일자
+   // @NotBlank
+    private LocalDateTime end_date;// 종료일자
 
-    private Date end_date;// 종료일자
-
-    @NotNull(message = "인워수를 적어주세요")
+    @NotNull
     private int quota;//모집 인원
 
     private int found_raised; //모금액
 
     @NotBlank
-    @Pattern(regexp = "^(https?|ftp)://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+([/?].*)?$", message = "올바르지 않은 URL주소입니다.")
+//    @Pattern(regexp = "^(https?|ftp)://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+([/?].*)?$")
     private String chat_url;// 외부 채팅 링크
 
-    private int count; //조회수
-
+    private int view_ctn; //조회수
 
     private SocialingStatus del_yn; // 사용여부
 
     private LocalDateTime reg_date; // 등록 일자
 
     private LocalDateTime mod_date;// 수정 일자
-
-
-    private String imgUrl; //사진
-
 
 }

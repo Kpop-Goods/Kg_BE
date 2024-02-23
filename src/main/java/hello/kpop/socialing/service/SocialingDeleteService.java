@@ -2,6 +2,7 @@ package hello.kpop.socialing.service;
 
 
 import hello.kpop.socialing.Socialing;
+import hello.kpop.socialing.SocialingStatus;
 import hello.kpop.socialing.exception.SocialingNotFoundException;
 import hello.kpop.socialing.repository.SocialingRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,13 @@ public class SocialingDeleteService {
 
     private final SocialingRepository socialingRepository;
 
-    //소셜 삭제 (타입으로 삭제 말고 바뀌게 )
     @Transactional
-    public void deleteSocial(Long Id){
-        //삭제시 Id가 없으면 예외 발생
-        Socialing socialing= socialingRepository.findById(Id).orElseThrow(SocialingNotFoundException::new);
-        //있으면 삭제
-        socialingRepository.delete(socialing);
-        socialingRepository.flush();
+    public void deleteSocial(Long id) {
+        // Id에 해당하는 소셜링을 찾습니다.
+        Socialing socialing = socialingRepository.findById(id).orElseThrow(SocialingNotFoundException::new);
+
+        // 소셜링의 타입을 변경하고 저장
+        socialing.updateType(SocialingStatus.COMPLETE);
+        socialingRepository.save(socialing);
     }
 }

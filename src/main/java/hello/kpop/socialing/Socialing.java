@@ -4,15 +4,13 @@ import hello.kpop.artist.Artist;
 import hello.kpop.board.dto.Base;
 import hello.kpop.socialing.dto.SocialingRequestDto;
 import hello.kpop.user.User;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.*;
-import java.util.Date;
-
-import static hello.kpop.socialing.SocialingStatus.RECRUIT;
+import java.time.LocalDateTime;
 
 //엔티티
 @Entity
@@ -45,13 +43,13 @@ public class Socialing extends Base {
     private String type; //소셜링 타입
 
     @Column(nullable = false)
-    private String social_place; // 위치 (추가)
+    private String social_place; // 장소 (추가)
 
     @Column
-    private Date start_date; // 시작 기간
+    private LocalDateTime start_date; // 시작 기간
 
     @Column
-    private Date end_date; // 종료 기간
+    private LocalDateTime end_date; // 종료 기간
 
     @Column(nullable = false)
     private int quota; // 모집 인원
@@ -62,11 +60,21 @@ public class Socialing extends Base {
     @Column
     private String chat_url; // 외부 채팅 링크
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view_ctn; // 조회수
+
     @Column
-    private int count; // 조회수
+    private int follow_cnt; // 팔로우
+
+    @Column
+    private int like_cnt;  //좋아요
 
     @Enumerated(EnumType.STRING)
-    private SocialingStatus del_yn=RECRUIT; // 사용 여부
+    private SocialingStatus del_yn=SocialingStatus.RECRUIT; // 모집 여부
+
+    public void  updateType(SocialingStatus del_yn){
+        this.del_yn = del_yn;
+    }
 
 
 
@@ -74,30 +82,37 @@ public class Socialing extends Base {
     //요청 데이터 엔티티 변환
     public Socialing(SocialingRequestDto socialingRequestDto){
         this.socialingId = socialingRequestDto.getSocialingId();
+
+        this.artistId = socialingRequestDto.getArtist_name();
+
         this.socialing_name=socialingRequestDto.getSocialing_name();
         this.socialing_content=socialingRequestDto.getSocialing_content();
+        this.social_place = socialingRequestDto.getSocial_place();
+        this.type = socialingRequestDto.getType();
         this.start_date = socialingRequestDto.getStart_date();
         this.end_date = socialingRequestDto.getEnd_date();
         this.quota=socialingRequestDto.getQuota();
         this.funds_raised=socialingRequestDto.getFound_raised();
         this.chat_url = socialingRequestDto.getChat_url();
-        this.count =socialingRequestDto.getCount();
+        this.view_ctn =socialingRequestDto.getView_ctn();
         this.del_yn = socialingRequestDto.getDel_yn();
-        this.social_place = socialingRequestDto.getSocial_place();
     }
 
     //업데이트용 메서드
     public void modify(SocialingRequestDto socialingRequestDto){
+
+        this.artistId = socialingRequestDto.getArtist_name();
+
         this.socialing_name=socialingRequestDto.getSocialing_name();
         this.socialing_content=socialingRequestDto.getSocialing_content();
+        this.social_place = socialingRequestDto.getSocial_place();
+        this.type = socialingRequestDto.getType();
         this.start_date = socialingRequestDto.getStart_date();
         this.end_date = socialingRequestDto.getEnd_date();
         this.quota=socialingRequestDto.getQuota();
         this.funds_raised=socialingRequestDto.getFound_raised();
         this.chat_url = socialingRequestDto.getChat_url();
         this.del_yn = socialingRequestDto.getDel_yn();
-        this.social_place = socialingRequestDto.getSocial_place();
     }
-
 
 }

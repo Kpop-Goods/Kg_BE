@@ -25,12 +25,12 @@ public class SocialingSearchController {
     @GetMapping
     public ResponseJSONData<ListData<?>> search(SocialingSearchDto searchDto){
         if (!StringUtils.hasText(searchDto.getSkey())) {
-            throw new BadRequestException(ProcessUtils.getMessage("NotBlank.skey", "error"));
+            throw new BadRequestException(ProcessUtils.getMessage("NotBlank.skey", "errors"));
         }
         String sopt = searchDto.getSopt();
 
         if(!StringUtils.hasText(sopt)){
-             searchDto.setSopt("sname_sartist");
+             searchDto.setSopt("ALL");
         }
         ListData<Socialing> listdata = infoService.getList(searchDto);
 

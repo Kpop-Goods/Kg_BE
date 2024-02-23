@@ -10,7 +10,7 @@ server:
 spring:
   # 프로필 설정
   profiles:
- #   active: dev
+    active: dev
     include: oauth, jwt
   application:
     name: user-service

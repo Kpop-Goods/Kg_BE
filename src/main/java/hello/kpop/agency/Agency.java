@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Data // -> getter랑 setter 역할까지 다 해줌
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "AGENCY")
+@Table(name = "agency")
 @Builder
 public class Agency {
 
