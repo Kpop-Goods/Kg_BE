@@ -68,6 +68,9 @@ public class SecurityConfig {
                         .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
                         .requestMatchers("/user/**").authenticated()
                         .requestMatchers("/email/**").authenticated()
+                        .requestMatchers("/agency/**").permitAll() //추후 수정될 수 있음
+                        .requestMatchers("/artist/**").permitAll() //추후 수정될 수 있음
+                        .requestMatchers("/place/**").permitAll() //추후 수정될 수 있음
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
 
                 //== 소셜 로그인 설정 ==//
