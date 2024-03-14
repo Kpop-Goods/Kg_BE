@@ -1,7 +1,10 @@
 package hello.kpop.global.login.fillter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hello.kpop.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -14,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 /*
@@ -33,6 +37,9 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
             new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD); //"/login" + POST 로 온 요청에 매칭된다.
 
     private final ObjectMapper objectMapper;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public CustomJsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper) {
         /*
@@ -86,8 +93,12 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
         String userEmail = usernamePasswordMap.get(USERNAME_KEY);
         String password = usernamePasswordMap.get(PASSWORD_KEY);
 
-        //UsernamePasswordAuthenticationToken객체는 인증 처리 객체인 AuthenticationManager가 인증 시 사용할 인증 대상 객체가 된다.
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userEmail, password); //email이 인증 대상 객체의 principal, password가 인증 대상 객체의 credentials가 된다.
-        return this.getAuthenticationManager().authenticate(authRequest); //인증 처리 객체인 AuthenticationManager가 인증 성공/인증 실패 처리를 하게 된다.
+        request.setAttribute("userEmail", userEmail); // 이메일을 HttpServletRequest의 속성으로 설정
+
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userEmail, password);
+
+        return this.getAuthenticationManager().authenticate(authRequest);
+
     }
+
 }

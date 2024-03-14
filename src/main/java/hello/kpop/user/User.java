@@ -5,11 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.*;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -76,6 +80,16 @@ public class User {
     @LastModifiedDate
     private LocalDateTime lastModDate; //최종 수정일시
 
+    @Column(name = "follow_cnt")
+    private Integer followCnt; // 팔로워 수
+
+    @PrePersist
+    public void prePersist() {
+        this.followCnt = this.followCnt == null ? 0 : this.followCnt;
+        this.lockCnt = this.lockCnt == null ? 0 : this.lockCnt;
+        this.lockYn = this.lockYn == null ? 'N' : this.lockYn;
+    }
+
     // 유저 권한 설정 메소드
     public void authorizeUser() {
         this.userType = Role.USER;
@@ -116,5 +130,15 @@ public class User {
         if (requestDto.getPassword() != null && !requestDto.getPassword().equals(this.password)) {
             this.password = passwordEncoder.encode(requestDto.getPassword());
         }
+    }
+
+    public void updateLock(Character lockYn, Integer lockCnt) {
+        this.lockYn = lockYn;
+        this.lockCnt = lockCnt;
+    }
+
+    @Transactional
+    public void updateUserStatCode(String userStatCode) {
+        this.userStatCode = userStatCode;
     }
 }
