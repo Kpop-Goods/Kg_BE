@@ -10,6 +10,12 @@ version = '0.0.1-SNAPSHOT'
 java {
     sourceCompatibility = '17'
 }
+// java {
+//     sourceCompatibility = '17'
+// }
+// 자바 버전 설정
+sourceCompatibility = 17
+targetCompatibility = 17
 
 configurations {
     compileOnly {
@@ -25,6 +31,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
@@ -64,5 +71,4 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
 

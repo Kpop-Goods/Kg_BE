@@ -1,54 +1,91 @@
 package hello.kpop.artist;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.kpop.agency.Agency;
 import hello.kpop.artist.dto.ArtistDto;
-import hello.kpop.place.Place;
+import hello.kpop.place.BaseTimeEntity;
 import lombok.*;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Data // -> getter랑 setter 역할까지 다 해줌
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "ARTIST")
-public class Artist {
+@Table(name = "artist")
+public class Artist extends BaseTimeEntity {
 
+    //아티스트 ID (PK)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long artistId; // 아티스트 ID (PK)
+    @Column(name = "artist_id")
+    private Long artistId;
 
-    @Column
-    private String artistImg; // 대표 이미지
+    //아티스트 코드
+    @Column(name = "artist_cd", nullable = false, length = 100)
+    private String artistCd;
 
-    @Column(name = "artistContent", columnDefinition = "TEXT", nullable = false)
-    private String artistContent; // 아티스트 설명
+    //아티스트 이름
+    @Column(name = "artist_name", nullable = false, unique = true, length = 20)
+    private String artistName;
 
-    @Column(nullable = false, unique = true)
-    private String artistName; // 아티스트 이름
+    //아티스트 설명
+    @Column(name = "comment", length = 500, nullable = false)
+    private String comment;
 
-    @Column
-    private int artistCount; // 팔로워수
+    //아티스트 팔로워 수
+    @Column(name = "follow_cnt", columnDefinition = "integer default 0")
+    private int followCnt;
+
+    //성별
+    @Column(name = "gender", length = 1)
+    private String gender;
+
+    //유닛여부
+    @Column(name = "unit_yn", length = 1)
+    private String unitYN;
+
+    //삭제여부
+    @Column(name = "del_yn", length = 1)
+    private String delYN;
+
+    //등록 아이디
+    @Column(name = "reg_id", length = 100)
+    private String regId;
+
+    //수정 아이디
+    @Column(name = "mod_id", length = 100)
+    private String modId;
 
     //Agency 조인
+    @JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY) //소속사는 여러 명의 아티스트를 가질 수 있음
-    @JoinColumn(name = "agencyId")
+    @JoinColumn(name = "agency_fk")
     private Agency agency; // fk(=Agency_pk)
 
-    public Artist(ArtistDto requestDto) {
-        this.artistImg = requestDto.getArtistImg();
-        this.artistContent = requestDto.getArtistContent();
+    //Image 조인
+//    @OneToMany
+//    private List<Image> image;
+
+    public Artist(ArtistDto requestDto, Agency agency) {
+        this.artistCd = requestDto.getArtistCd();
         this.artistName = requestDto.getArtistName();
-        this.artistCount = requestDto.getArtistCount();
+        this.comment = requestDto.getComment();
+        this.gender = requestDto.getGender();
+        this.unitYN = requestDto.getUnitYN();
+        this.regId = requestDto.getRegId();
+        this.modId = requestDto.getModId();
+        this.agency = agency;
     }
 
     public void update(ArtistDto requestDto) {
-        this.artistImg = requestDto.getArtistImg();
-        this.artistContent = requestDto.getArtistContent();
+        this.artistCd = requestDto.getArtistCd();
         this.artistName = requestDto.getArtistName();
-        this.artistCount = requestDto.getArtistCount();
+        this.comment = requestDto.getComment();
+        this.gender = requestDto.getGender();
+        this.unitYN = requestDto.getUnitYN();
+        this.regId = requestDto.getRegId();
+        this.modId = requestDto.getModId();
     }
 }
