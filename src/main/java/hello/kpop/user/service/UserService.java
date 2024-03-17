@@ -7,11 +7,14 @@ import hello.kpop.user.dto.UserResponseDto;
 import hello.kpop.user.dto.UserSuccessResponseDto;
 import hello.kpop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.hamcrest.core.Is;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @Service
 @Transactional(readOnly = true)
@@ -42,14 +45,19 @@ public class UserService {
                 .build();
 
         user.passwordEncode(passwordEncoder);
-        userRepository.save(user);
+
+        User resultUser = userRepository.save(user);
+        assertThat(resultUser.getFollowCnt(), Is.is(0)); //성공!
+        assertThat(resultUser.getLockCnt(), Is.is(0));
+        assertThat(resultUser.getLockYn(), Is.is('N'));
+
         return new UserResponseDto(user);
     }
 
     //유저 회원정보 수정
     @Transactional
-    public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) throws Exception {
-        User user = userRepository.findById(id).orElseThrow(
+    public UserResponseDto updateUser(Authentication authentication, UserRequestDto userRequestDto) throws Exception {
+        User user = userRepository.findByUserEmail(authentication.getName()).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
         // // 사용자가 입력한 비밀번호를 암호화하여 저장된 비밀번호와 비교합니다.
@@ -61,19 +69,35 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
-    //유저 회원 탈퇴
+    // 유저 회원정보 조회
     @Transactional
-    public UserSuccessResponseDto deleteUser(Long id) throws Exception {
-        User user = userRepository.findById(id).orElseThrow(
+    public UserResponseDto searchUser(Authentication authentication) throws Exception {
+        User user = userRepository.findByUserEmail(authentication.getName()).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
-        userRepository.deleteById(id);
+        return new UserResponseDto(user);
+    }
+
+    //유저 회원 탈퇴
+    @Transactional
+    public UserSuccessResponseDto deleteUser(Authentication authentication) throws Exception {
+        User user = userRepository.findByUserEmail(authentication.getName()).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+
+        if (user.getUserStatCode().equals("delete")) {
+            throw new IllegalArgumentException("이미 탈퇴한 회원입니다.");
+        }
+
+        user.updateUserStatCode("delete");
+        userRepository.save(user); // 상태를 업데이트한 후에 저장하여 트랜잭션을 커밋하도록 함
+
         return new UserSuccessResponseDto(true);
     }
 
     // 로그아웃
     @Transactional
     public void logout(Authentication authentication) {
+
         String email = authentication.getName();
         System.out.println("이메일: " + email);
 

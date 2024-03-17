@@ -19,27 +19,28 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table
+@Table(name="socialing")
 public class Socialing extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "socialing_id")
     private Long socialingId; // 소셜링 ID (PK)
 
     @ManyToOne(fetch = FetchType.LAZY) //유저는 여러 개의 생일 카페 및 팝업스토어를 가질 수 있음
     @JoinColumn(name = "user_fk") //artist_id 컬럼과 조인
     private User user; // 유저 ID (FK)
 
-    @Column(nullable = false)
+    @Column( length = 100, nullable = false)
     private  String socialing_name; // 소셜링 명
 
-    @Column
+    @Column(length = 200)
     private String socialing_content; // 소셜링 내용
 
-    @Column
+    @Column(length = 20)
     private String type; //소셜링 타입
 
-    @Column(nullable = false)
+    @Column(length = 15,nullable = false)
     private String social_place; // 장소 (추가)
 
     @Column
@@ -48,7 +49,7 @@ public class Socialing extends Base {
     @Column
     private LocalDate end_date; // 종료 기간
 
-    @Column(nullable = false)
+    @Column(length = 10,nullable = false)
     private int quota; // 모집 인원
 
     @Column

@@ -89,26 +89,36 @@ public class UserController {
     }
 
     // 유저 회원정보 수정 API
-    @PutMapping("/users/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
+    @PutMapping("/updateUser")
+    public ResponseEntity<?> updateUser(Authentication authentication, @RequestBody @Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
         ResponseEntity<CustomResponse> validationResponse = handleValidationErrors(bindingResult);
         if (validationResponse != null) {
             return validationResponse;
         }
 
         try {
-            userService.updateUser(id, userRequestDto);
-            return ResponseEntity.ok().body(new CustomResponse(HttpStatus.OK.value(), "회원정보 수정 성공", null));
+            return ResponseEntity.ok().body(new CustomResponse(HttpStatus.OK.value(), "회원정보 수정 성공", userService.updateUser(authentication, userRequestDto)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomResponse(500, "회원정보 수정 실패", null));
         }
     }
 
-    // 유저 회원 탈퇴 API
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+
+    // 회원정보 조회
+    @PostMapping("/searchUser")
+    public ResponseEntity<?> searchUser(Authentication authentication) {
         try {
-            userService.deleteUser(id);
+            return ResponseEntity.ok().body(new CustomResponse(HttpStatus.OK.value(), "회원정보 조회 성공", userService.searchUser(authentication)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomResponse(500, "회원정보 조회 실패", null));
+        }
+    }
+
+    // 유저 회원 탈퇴 API
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<?> deleteUser(Authentication authentication) {
+        try {
+            userService.deleteUser(authentication);
             return ResponseEntity.ok().body(new CustomResponse(HttpStatus.OK.value(), "회원 탈퇴 성공", null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomResponse(500, "회원 탈퇴 실패", null));
