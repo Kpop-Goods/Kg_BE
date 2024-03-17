@@ -25,7 +25,8 @@ public class ResponseJSONData<T> {
     //메세지
     private Object message;
 
-    public ResponseJSONData(T data, Object message) {
+    public ResponseJSONData( T data, Object message) {
+
         this.data = data;
         this.message = message;
     }

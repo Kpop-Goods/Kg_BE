@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 
-//세션값으로 로그인 상태 확인 및 권한 확인 ( 토큰을 이용해서 만들어야하는지 )
 @Component
 @RequiredArgsConstructor
 public class SocialingUtils {

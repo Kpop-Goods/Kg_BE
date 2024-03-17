@@ -1,8 +1,8 @@
 package hello.kpop.agency;
 
-import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Data // -> getter랑 setter 역할까지 다 해줌
@@ -16,6 +16,7 @@ public class Agency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "agencyId")
+    @JsonIgnore
     private Long agencyId;
 
     //소속사 이름

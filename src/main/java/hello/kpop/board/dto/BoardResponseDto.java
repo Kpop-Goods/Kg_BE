@@ -28,7 +28,6 @@ public class BoardResponseDto {
         this.content = noticeBoard.getContent();
         this.type = noticeBoard.getType();
         this.imgUrl = noticeBoard.getImgUrl();
-        this.reg_dt = noticeBoard.getReg_dt();
         this.mod_dt = noticeBoard.getMod_dt();
     }
 }

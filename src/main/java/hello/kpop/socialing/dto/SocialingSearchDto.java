@@ -12,8 +12,11 @@ public class SocialingSearchDto {
     private String sopt; // 검색 옵션
     private String skey; // 검색 키워드
 
-    private String type;
-    private String socialPlace;
+
+    private String name; // 제목
+    private String artist; // 아티스트
+    private String type; // 타입
+    private String place; // 지역
 
 
 

@@ -10,6 +10,7 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
     //아티스트 등록
     Optional<Artist> findByArtistName(String artistName);
 
+
     //아티스트 전체 조회
     List<Artist> findAll();
 }

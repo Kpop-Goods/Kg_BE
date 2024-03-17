@@ -28,7 +28,6 @@ public class BoardListResponseDto{
         this.noticeId = noticeBoard.getNoticeId();
         this.userId=noticeBoard.getUserId();
         this.subject=noticeBoard.getSubject();
-        this.reg_dt = noticeBoard.getReg_dt();
 
     }
 }

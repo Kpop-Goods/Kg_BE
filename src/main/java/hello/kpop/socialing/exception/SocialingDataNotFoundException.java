@@ -1,6 +1,5 @@
 package hello.kpop.socialing.exception;
 
-import hello.kpop.socialing.common.CommonException;
 import hello.kpop.socialing.common.ProcessUtils;
 import org.springframework.http.HttpStatus;
 
@@ -10,8 +9,12 @@ import org.springframework.http.HttpStatus;
  * */
 public class SocialingDataNotFoundException extends CommonException {
 
+    public SocialingDataNotFoundException(String message){
+        super(message, HttpStatus.BAD_REQUEST);
+    }
+
     public SocialingDataNotFoundException() {
-        super(ProcessUtils.getMessage("NotFound.SocialingData","error"), HttpStatus.NOT_FOUND);
+        super(ProcessUtils.getMessage("NotFound.SocialingData","errors"), HttpStatus.NOT_FOUND);
     }
 
 

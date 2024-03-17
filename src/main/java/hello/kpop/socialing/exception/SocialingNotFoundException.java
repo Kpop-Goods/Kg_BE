@@ -1,6 +1,5 @@
 package hello.kpop.socialing.exception;
 
-import hello.kpop.socialing.common.CommonException;
 import hello.kpop.socialing.common.ProcessUtils;
 import org.springframework.http.HttpStatus;
 

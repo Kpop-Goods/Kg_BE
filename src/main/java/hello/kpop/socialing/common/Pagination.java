@@ -64,12 +64,12 @@ public class Pagination {
 
         /*
          * 쿼리스트링 값 유지 처리 - 쿼리스트링 값 중에서 page만 제외하고 다시 조합
-         *  예) ?orderStatus=CASH&name=...&page=2 -> ?orderStatus=CASH&name=...
+         *  예) ?status=STATUS&name=...&page=2 -> ?status=STATUS&name=...
          *      ?page=2 -> ?
          *      없는 경우 -> ?
          *
          *      &로 문자열 분리
-         *      { "orderStatus=CASH", "name=....", "page=2" }
+         *      { "status=STATUS", "name=....", "page=2" }
          */
 
         String baseURL = "?";
@@ -102,7 +102,6 @@ public class Pagination {
 
     public List<String[]> getPages() {
         // 0 : 페이지 번호, 1 : 페이지 URL - ?page=페이지번호
-
 
         return IntStream.rangeClosed(firstRangePage, lastRangePage)
                 .mapToObj(p -> new String[] { String.valueOf(p),
