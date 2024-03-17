@@ -28,7 +28,10 @@ public class PlaceDto {
     private LocalTime startTime;
     private LocalTime endTime;
     private String regId;
-    private String modId;
     private Long artistId;
+
+    public void updateRegId(String regId) {
+        this.regId = regId;
+    }
 
 }

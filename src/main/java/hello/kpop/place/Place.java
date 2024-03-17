@@ -6,6 +6,8 @@ import hello.kpop.place.dto.PlaceDto;
 import lombok.*;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -94,16 +96,13 @@ public class Place extends BaseTimeEntity {
     private int followCnt;
 
     //삭제여부
-    @Column(name = "del_yn", length = 1)
+    @Column(name = "del_yn", length = 1, columnDefinition = "varchar(1) default 'N'")
+//    @ColumnDefault("'N'") // default
     private String delYN;
 
     //등록 아이디
     @Column(name = "reg_id", length = 100)
     private String regId;
-
-    //수정 아이디
-    @Column(name = "mod_id", length = 100)
-    private String modId;
 
     //Artist 조인
     @ManyToOne(fetch= FetchType.LAZY)
@@ -132,7 +131,6 @@ public class Place extends BaseTimeEntity {
         this.startTime = requestDto.getStartTime();
         this.endTime = requestDto.getEndTime();
         this.regId = requestDto.getRegId();
-        this.modId = requestDto.getModId();
         this.artist = artist;
     }
 
@@ -152,7 +150,9 @@ public class Place extends BaseTimeEntity {
         this.endDate = requestDto.getEndDate();
         this.startTime = requestDto.getStartTime();
         this.endTime = requestDto.getEndTime();
-        this.regId = requestDto.getRegId();
-        this.modId = requestDto.getModId();
+    }
+
+    public void updateDelYN(String delYN) {
+        this.delYN = delYN;
     }
 }

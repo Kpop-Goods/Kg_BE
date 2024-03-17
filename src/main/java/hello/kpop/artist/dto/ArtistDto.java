@@ -18,8 +18,11 @@ public class ArtistDto {
     private String unitYN;
     private String regId;
     private LocalDateTime regDt;
-    private String modId;
     private LocalDateTime modDt;
     private Long agencyId;
+
+    public void updateRegId(String regId) {
+        this.regId = regId;
+    }
 
 }

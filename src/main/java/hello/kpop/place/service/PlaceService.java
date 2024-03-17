@@ -1,5 +1,6 @@
 package hello.kpop.place.service;
 
+import hello.kpop.agency.status.DelStatus;
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.dto.SuccessResponseDto;
 import hello.kpop.artist.repository.ArtistRepository;
@@ -43,7 +44,8 @@ public class PlaceService {
         Place place = new Place(requestDto, artist);
 
         //등록 시 삭제여부는 N으로 설정
-        place.setDelYN("N");
+//        place.setDelYN("N");
+        place.updateDelYN(DelStatus.DEFAULT);
 
         placeRepository.save(place);
 
@@ -109,7 +111,9 @@ public class PlaceService {
         Place place = placeRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("장소 ID가 존재하지 않습니다."));
 
-        place.setDelYN("Y");
+//        place.setDelYN("Y");
+        place.updateDelYN(DelStatus.DELETE);
+
         return new SuccessResponseDto(true);
     }
 
