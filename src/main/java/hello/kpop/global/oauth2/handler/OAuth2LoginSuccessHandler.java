@@ -3,6 +3,7 @@ package hello.kpop.global.oauth2.handler;
 import hello.kpop.global.jwt.service.JwtService;
 import hello.kpop.global.oauth2.CustomOAuth2User;
 import hello.kpop.user.Role;
+import hello.kpop.user.User;
 import hello.kpop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +38,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 response.sendRedirect("oauth2/sign-up"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
 
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null);
-//                User findUser = userRepository.findByEmail(oAuth2User.getEmail())
-//                                .orElseThrow(() -> new IllegalArgumentException("이메일에 해당하는 유저가 없습니다."));
-//                findUser.authorizeUser();
+                User findUser = userRepository.findByUserEmail(oAuth2User.getEmail())
+                                .orElseThrow(() -> new IllegalArgumentException("이메일에 해당하는 유저가 없습니다."));
+                findUser.authorizeUser();
             } else {
                 loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
             }

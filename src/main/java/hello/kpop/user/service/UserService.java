@@ -56,8 +56,8 @@ public class UserService {
 
     //유저 회원정보 수정
     @Transactional
-    public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) throws Exception {
-        User user = userRepository.findById(id).orElseThrow(
+    public UserResponseDto updateUser(Authentication authentication, UserRequestDto userRequestDto) throws Exception {
+        User user = userRepository.findByUserEmail(authentication.getName()).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
         // // 사용자가 입력한 비밀번호를 암호화하여 저장된 비밀번호와 비교합니다.
@@ -69,10 +69,19 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
+    // 유저 회원정보 조회
+    @Transactional
+    public UserResponseDto searchUser(Authentication authentication) throws Exception {
+        User user = userRepository.findByUserEmail(authentication.getName()).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+
+        return new UserResponseDto(user);
+    }
+
     //유저 회원 탈퇴
     @Transactional
-    public UserSuccessResponseDto deleteUser(Long id) throws Exception {
-        User user = userRepository.findById(id).orElseThrow(
+    public UserSuccessResponseDto deleteUser(Authentication authentication) throws Exception {
+        User user = userRepository.findByUserEmail(authentication.getName()).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
         if (user.getUserStatCode().equals("delete")) {
