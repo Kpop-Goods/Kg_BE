@@ -62,10 +62,11 @@ public class SecurityConfig {
 
                 //== URL별 권한 관리 옵션 ==//
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/userSignUp").permitAll()
                         // 아이콘, css, js 관련
                         // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
                         .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
+                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/email/**").permitAll()
                         .requestMatchers("/user/**").authenticated()
                         .requestMatchers("/email/**").authenticated()
                         .requestMatchers("/agency/**").permitAll() //추후 수정될 수 있음
