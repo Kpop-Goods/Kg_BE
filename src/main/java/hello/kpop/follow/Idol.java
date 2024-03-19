@@ -1,4 +1,4 @@
-package hello.kpop.follow.idol;
+package hello.kpop.follow;
 
 import lombok.Getter;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -12,16 +12,20 @@ public class Idol {
 	@GeneratedValue
 	private Long id;
 
-// @Property
-	private Long idolid;
+	private Long idolId;
 	private String name;
 
-	public Idol(Long idolId, String name) {
-		this.idolid = idolId;
+	private Boolean unit;
+	private Boolean gender;
+
+	public Idol(Long idolId, String name, Boolean unit, Boolean gender) {
+		this.idolId = idolId;
 		this.name = name;
+		this.unit = unit;
+		this.gender = gender;
 	}
 
 	public String toString() {
-		return this.name + ", " + this.idolid;
+		return this.name + ", " + this.idolId;
 	}
 }
