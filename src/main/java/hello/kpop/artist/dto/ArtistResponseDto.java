@@ -20,7 +20,6 @@ public class ArtistResponseDto {
     private String delYN;
     private String regId;
     private LocalDateTime regDt;
-    private String modId;
     private LocalDateTime modDt;
     private Long agencyId;
 
@@ -35,7 +34,6 @@ public class ArtistResponseDto {
         this.delYN = entity.getDelYN();
         this.regId = entity.getRegId();
         this.regDt = entity.getRegDt();
-        this.modId = entity.getModId();
         this.modDt = entity.getModDt();
         this.agencyId = entity.getAgency().getAgencyId();
     }

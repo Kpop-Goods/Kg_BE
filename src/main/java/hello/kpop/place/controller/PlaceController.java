@@ -1,6 +1,7 @@
 package hello.kpop.place.controller;
 
 import hello.kpop.artist.dto.SuccessResponseDto;
+import hello.kpop.artist.errorHandler.ArtistResponseMessage;
 import hello.kpop.artist.repository.ArtistRepository;
 import hello.kpop.place.Place;
 import hello.kpop.place.dto.MultiResponseDto;
@@ -11,16 +12,22 @@ import hello.kpop.place.errorHandler.PlaceResponseMessage;
 import hello.kpop.place.errorHandler.StatusCode;
 import hello.kpop.place.repository.PlaceRepository;
 import hello.kpop.place.service.PlaceService;
+import hello.kpop.user.Role;
+import hello.kpop.user.User;
+import hello.kpop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 
 @Slf4j
 @RestController
@@ -30,10 +37,16 @@ public class PlaceController {
     private final PlaceService placeService;
     private final ArtistRepository artistRepository;
     private final PlaceRepository placeRepository;
+    private final UserRepository userRepository;
 
     //이벤트 장소 등록
-    @PostMapping("/place/{artistId}") //추후 파라미터에 로그인 한 유저 정보 필요
-    public ResponseEntity<PlaceResponseDto> savePlace(@RequestBody PlaceDto requestDto, @PathVariable Long artistId) throws Exception {
+    @PostMapping("/place/{artistId}")
+    public ResponseEntity<PlaceResponseDto> savePlace(@RequestBody PlaceDto requestDto, @PathVariable Long artistId, Authentication authentication) throws Exception {
+
+        //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
+        if(authentication == null) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, PlaceResponseMessage.UNAUTHORIZED_EVENT_REGISTER), HttpStatus.UNAUTHORIZED);
+        }
 
         //이벤트 중복 등록 방지
         if(placeRepository.findByAddress(requestDto.getAddress()).isPresent() && artistRepository.findById(artistId).isPresent()) {
@@ -74,7 +87,17 @@ public class PlaceController {
         if(requestDto.getStreetAddress() == null) {
             return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, PlaceResponseMessage.STREET_ADDRESS_NOT_ENTERED), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, PlaceResponseMessage.EVENT_REGISTER_SUCCESS, placeService.savePlace(requestDto, artistId)), HttpStatus.OK);
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+
+        if (user.getUserType() == Role.USER) {
+            requestDto.updateRegId(user.getNickname());
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, PlaceResponseMessage.EVENT_REGISTER_SUCCESS, placeService.savePlace(requestDto, artistId)), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, PlaceResponseMessage.UNAUTHORIZED_EVENT_REGISTER), HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     //이벤트 장소 전체 조회
@@ -105,8 +128,14 @@ public class PlaceController {
     }
 
     //선택한 이벤트 장소 정보 수정
-    @PutMapping("/place/{eventId}") //추후 파라미터에 로그인 한 유저 정보 필요
-    public ResponseEntity<PlaceResponseDto> updatePlace(@PathVariable Long eventId, @RequestBody PlaceDto requestDto) throws Exception {
+    @PutMapping("/place/{eventId}")
+    public ResponseEntity<PlaceResponseDto> updatePlace(@PathVariable Long eventId, @RequestBody PlaceDto requestDto, Authentication authentication) throws Exception {
+
+        //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
+        if(authentication == null) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, PlaceResponseMessage.UNAUTHORIZED_EVENT_UPDATE), HttpStatus.UNAUTHORIZED);
+        }
+
         Optional<Place> placeOptional = placeRepository.findById(eventId);
 
         //이벤트 ID가 일치하는 게 없을 시 실행
@@ -122,18 +151,42 @@ public class PlaceController {
             return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, PlaceResponseMessage.DELETED_PLACE), HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, PlaceResponseMessage.UPDATE_PLACE_SUCCESS, placeService.updatePlace(eventId, requestDto)), HttpStatus.OK);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+
+        //이벤트를 등록한 사람만 수정 가능
+        if(place.getRegId().equals(user.getNickname())) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, PlaceResponseMessage.UPDATE_PLACE_SUCCESS, placeService.updatePlace(eventId, requestDto)), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, PlaceResponseMessage.UNAUTHORIZED_EVENT_UPDATE), HttpStatus.UNAUTHORIZED);
+        }
     }
 
     //선택한 이벤트 장소 삭제
-    @DeleteMapping("/place/{eventId}") //추후 파라미터에 로그인 한 유저 정보 필요
-    public ResponseEntity<SuccessResponseDto> deletePlace(@PathVariable Long eventId) throws Exception {
+    @DeleteMapping("/place/{eventId}")
+    public ResponseEntity<SuccessResponseDto> deletePlace(@PathVariable Long eventId, Authentication authentication) throws Exception {
+
+        //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
+        if(authentication == null) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, PlaceResponseMessage.UNAUTHORIZED_EVENT_DELETE), HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<Place> placeOptional = placeRepository.findById(eventId);
+        Place place = placeOptional.get();
 
         //이벤트 ID가 일치하는 게 없을 시 실행
         if(!(placeRepository.findById(eventId).isPresent())) {
             return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, PlaceResponseMessage.DELETE_PLACE_FAIL), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, PlaceResponseMessage.DELETE_PLACE_SUCCESS, placeService.deletePlace(eventId)), HttpStatus.OK);
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+
+        if(place.getRegId().equals(user.getNickname())) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, PlaceResponseMessage.DELETE_PLACE_SUCCESS, placeService.deletePlace(eventId)), HttpStatus.OK);
+        } else  {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, PlaceResponseMessage.UNAUTHORIZED_EVENT_DELETE), HttpStatus.UNAUTHORIZED);
+        }
     }
 
     //장소명(이벤트명), 장소 카테고리 코드, 아티스트코드, 소속사코드 검색했을 시 조회

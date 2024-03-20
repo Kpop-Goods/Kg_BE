@@ -25,7 +25,6 @@ public class AgencyResponseDto {
     private String delYN;
     private String regId;
     private LocalDateTime regDt;
-    private String modId;
     private LocalDateTime modDt;
 
     private List<Artist> artists = new ArrayList<>();
@@ -40,7 +39,6 @@ public class AgencyResponseDto {
         this.delYN = entity.getDelYN();
         this.regId = entity.getRegId();
         this.regDt = entity.getRegDt();
-        this.modId = entity.getModId();
         this.modDt = entity.getModDt();
         this.artists = entity.getArtists().stream().toList();
     }

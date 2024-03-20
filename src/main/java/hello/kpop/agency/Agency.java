@@ -52,16 +52,12 @@ public class Agency extends BaseTimeEntity {
     private String agencyInfo;
 
     //삭제여부
-    @Column(name = "del_yn", length = 10)
+    @Column(name = "del_yn", length = 1)
     private String delYN;
 
     //등록 아이디
     @Column(name = "reg_id", length = 100)
     private String regId;
-
-    //수정 아이디
-    @Column(name = "mod_id", length = 100)
-    private String modId;
 
     /*
      * 소속사는 여러 아티스트를 가질 수 있으므로
@@ -79,7 +75,6 @@ public class Agency extends BaseTimeEntity {
         this.establishDt = requestDto.getEstablishDt();
         this.agencyInfo = requestDto.getAgencyInfo();
         this.regId = requestDto.getRegId();
-        this.modId = requestDto.getModId();
     }
 
     public void update(AgencyDto requestDto) {
@@ -88,7 +83,9 @@ public class Agency extends BaseTimeEntity {
         this.countryCd = requestDto.getCountryCd();
         this.establishDt = requestDto.getEstablishDt();
         this.agencyInfo = requestDto.getAgencyInfo();
-        this.regId = requestDto.getRegId();
-        this.modId = requestDto.getModId();
+    }
+
+    public void updateDelYN(String delYN) {
+        this.delYN = delYN;
     }
 }

@@ -2,6 +2,7 @@ package hello.kpop.artist.service;
 
 import hello.kpop.agency.Agency;
 import hello.kpop.agency.repository.AgencyRepository;
+import hello.kpop.agency.status.DelStatus;
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.ArtistSpecification;
 import hello.kpop.artist.dto.ArtistDto;
@@ -39,7 +40,8 @@ public class ArtistService {
         Artist artist = new Artist(requestDto, agency);
 
         //등록 시 삭제여부는 N으로 설정
-        artist.setDelYN("N");
+//        artist.setDelYN("N");
+        artist.updateDelYN(DelStatus.DEFAULT);
 
         artistRepository.save(artist);
 
@@ -101,7 +103,9 @@ public class ArtistService {
         Artist artist = artistRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아티스트 ID가 존재하지 않습니다."));
 
-        artist.setDelYN("Y");
+//        artist.setDelYN("Y");
+        artist.updateDelYN(DelStatus.DELETE);
+
         return new SuccessResponseDto(true);
     }
 

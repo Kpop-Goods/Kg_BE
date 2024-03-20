@@ -1,17 +1,20 @@
 package hello.kpop.agency.service;
 
 import hello.kpop.agency.Agency;
+import hello.kpop.agency.status.DelStatus;
 import hello.kpop.agency.dto.AgencyDto;
 import hello.kpop.agency.dto.AgencyResponseDto;
 import hello.kpop.agency.repository.AgencyRepository;
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.repository.ArtistRepository;
+import hello.kpop.global.jwt.TokenValidator;
+import hello.kpop.global.jwt.service.JwtService;
 import hello.kpop.place.dto.SuccessResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +38,7 @@ public class AgencyService {
         Agency agency = new Agency(requestDto);
 
         //등록 시 삭제여부는 N으로 설정
-        agency.setDelYN("N");
+        agency.updateDelYN(DelStatus.DEFAULT);
 
         agencyRepository.save(agency);
 
@@ -71,7 +74,6 @@ public class AgencyService {
                     .collect(Collectors.toList());
         }
         return responseDtoList;
-
     }
 
     //선택한 소속사와 해당 소속사 아티스트 조회
@@ -121,7 +123,9 @@ public class AgencyService {
         Agency agency = agencyRepository.findById(agencyId).orElseThrow(
                 () -> new IllegalArgumentException("소속사 ID가 존재하지 않습니다."));
 
-        agency.setDelYN("Y");
+//        agency.setDelYN("Y");
+        agency.updateDelYN(DelStatus.DELETE);
+
         return new SuccessResponseDto(true);
     }
 }

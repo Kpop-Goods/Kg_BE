@@ -56,10 +56,6 @@ public class Artist extends BaseTimeEntity {
     @Column(name = "reg_id", length = 100)
     private String regId;
 
-    //수정 아이디
-    @Column(name = "mod_id", length = 100)
-    private String modId;
-
     //Agency 조인
     @JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY) //소속사는 여러 명의 아티스트를 가질 수 있음
@@ -77,7 +73,6 @@ public class Artist extends BaseTimeEntity {
         this.gender = requestDto.getGender();
         this.unitYN = requestDto.getUnitYN();
         this.regId = requestDto.getRegId();
-        this.modId = requestDto.getModId();
         this.agency = agency;
     }
 
@@ -87,7 +82,9 @@ public class Artist extends BaseTimeEntity {
         this.comment = requestDto.getComment();
         this.gender = requestDto.getGender();
         this.unitYN = requestDto.getUnitYN();
-        this.regId = requestDto.getRegId();
-        this.modId = requestDto.getModId();
+    }
+
+    public void updateDelYN(String delYN) {
+        this.delYN = delYN;
     }
 }

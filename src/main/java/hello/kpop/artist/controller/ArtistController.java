@@ -1,5 +1,6 @@
 package hello.kpop.artist.controller;
 
+import hello.kpop.agency.Agency;
 import hello.kpop.agency.repository.AgencyRepository;
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.dto.ArtistDto;
@@ -11,9 +12,14 @@ import hello.kpop.place.dto.MultiResponseDto;
 import hello.kpop.place.errorHandler.DefaultRes;
 import hello.kpop.artist.errorHandler.ArtistResponseMessage;
 import hello.kpop.place.errorHandler.StatusCode;
+import hello.kpop.user.Role;
+import hello.kpop.user.User;
+import hello.kpop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,10 +32,16 @@ public class ArtistController {
     private final ArtistService artistService;
     private final ArtistRepository artistRepository;
     private final AgencyRepository agencyRepository;
+    private final UserRepository userRepository;
 
     //아티스트 등록
-    @PostMapping("/artist/{agencyId}") //추후 파라미터에 로그인 한 유저 정보 필요
-    public ResponseEntity<ArtistResponseDto> saveArtist(@RequestBody ArtistDto requestDto, @PathVariable Long agencyId) throws Exception {
+    @PostMapping("/artist/{agencyId}")
+    public ResponseEntity<ArtistResponseDto> saveArtist(@RequestBody ArtistDto requestDto, @PathVariable Long agencyId, Authentication authentication) throws Exception {
+
+        //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
+        if(authentication == null) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_REGISTER), HttpStatus.UNAUTHORIZED);
+        }
 
         //소속사 ID가 일치하는 게 없을 시 실행
         if(!(agencyRepository.findById(agencyId).isPresent())) {
@@ -61,7 +73,15 @@ public class ArtistController {
             return new ResponseEntity(DefaultRes.res(StatusCode.CONFLICT, ArtistResponseMessage.OVERLAP_ARTIST_NAME), HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.ARTIST_REGISTER_SUCCESS, artistService.saveArtist(requestDto, agencyId)), HttpStatus.OK);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+
+        if (user.getUserType() == Role.ADMIN) {
+            requestDto.updateRegId(user.getNickname());
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.ARTIST_REGISTER_SUCCESS, artistService.saveArtist(requestDto, agencyId)), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_REGISTER), HttpStatus.UNAUTHORIZED);
+        }
     }
 
     //아티스트 전체 조회
@@ -92,8 +112,14 @@ public class ArtistController {
     }
 
     //선택한 아티스트 정보 수정
-    @PutMapping("/artist/{artistId}") //추후 파라미터에 로그인 한 유저 정보 필요
-    public ResponseEntity<ArtistResponseDto> updateArtist(@PathVariable Long artistId, @RequestBody ArtistDto requestDto) throws Exception {
+    @PutMapping("/artist/{artistId}")
+    public ResponseEntity<ArtistResponseDto> updateArtist(@PathVariable Long artistId, @RequestBody ArtistDto requestDto, Authentication authentication) throws Exception {
+
+        //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
+        if(authentication == null) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_UPDATE), HttpStatus.UNAUTHORIZED);
+        }
+
         Optional<Artist> artistOptional = artistRepository.findById(artistId);
 
         //아티스트 ID가 일치하는 게 없을 시 실행
@@ -109,18 +135,43 @@ public class ArtistController {
             return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ArtistResponseMessage.DELETED_ARTIST), HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.UPDATE_ARTIST_SUCCESS, artistService.updateArtist(artistId, requestDto)), HttpStatus.OK);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+
+        //관리자만 수정 가능
+        if(artist.getRegId().equals(user.getNickname())) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.UPDATE_ARTIST_SUCCESS, artistService.updateArtist(artistId, requestDto)), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_UPDATE), HttpStatus.UNAUTHORIZED);
+        }
     }
 
     //선택한 아티스트 삭제
-    @DeleteMapping("/artist/{artistId}") //추후 파라미터에 로그인 한 유저 정보 필요
-    public ResponseEntity<SuccessResponseDto> deleteArtist(@PathVariable Long artistId) throws Exception {
+    @DeleteMapping("/artist/{artistId}")
+    public ResponseEntity<SuccessResponseDto> deleteArtist(@PathVariable Long artistId, Authentication authentication) throws Exception {
+
+        //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
+        if(authentication == null) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_DELETE), HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<Artist> artistOptional = artistRepository.findById(artistId);
+        Artist artist = artistOptional.get();
 
         //아티스트 ID가 일치하는 게 없을 시 실행
         if(!(artistRepository.findById(artistId).isPresent())) {
             return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, ArtistResponseMessage.DELETE_ARTIST_FAIL), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.DELETE_ARTIST_SUCCESS, artistService.deleteArtist(artistId)), HttpStatus.OK);
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+
+        if(artist.getRegId().equals(user.getNickname())) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.DELETE_ARTIST_SUCCESS, artistService.deleteArtist(artistId)), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_DELETE), HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     //아티스트 명 검색했을 시 조회
