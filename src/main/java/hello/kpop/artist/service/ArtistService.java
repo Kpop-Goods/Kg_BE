@@ -10,6 +10,7 @@ import hello.kpop.artist.dto.ArtistResponseDto;
 import hello.kpop.artist.dto.SuccessResponseDto;
 import hello.kpop.artist.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,24 @@ public class ArtistService {
         artistRepository.save(artist);
 
         return new ArtistResponseDto(artist);
+    }
+
+    //페이징 + 아티스트 전체 조회
+    @Transactional(readOnly = true)
+    public Page<Artist> pageArtistList(int page, int size) {
+        //삭제여부 "Y"인 데이터 가져옴
+        List<Artist> artists = artistRepository.findByDelYN("Y");
+
+        //전체 데이터 조회
+        Pageable pageable = PageRequest.of(page, size, Sort.by("artistId").descending());
+        Page<Artist> artistPage = artistRepository.findAll(pageable);
+
+        //"Y"인 데이터를 제외한 후 반환
+        List<Artist> filteredArtists = artistPage.getContent().stream()
+                .filter(artist -> !artists.contains(artist))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(filteredArtists, pageable, artistPage.getTotalElements());
     }
 
     //아티스트 전체 조회

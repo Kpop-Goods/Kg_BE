@@ -1,6 +1,5 @@
 package hello.kpop.artist.controller;
 
-import hello.kpop.agency.Agency;
 import hello.kpop.agency.repository.AgencyRepository;
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.dto.ArtistDto;
@@ -8,14 +7,16 @@ import hello.kpop.artist.dto.ArtistResponseDto;
 import hello.kpop.artist.dto.SuccessResponseDto;
 import hello.kpop.artist.repository.ArtistRepository;
 import hello.kpop.artist.service.ArtistService;
-import hello.kpop.place.dto.MultiResponseDto;
-import hello.kpop.place.errorHandler.DefaultRes;
+import hello.kpop.place.common.MultiResponseDto;
+import hello.kpop.place.common.DefaultRes;
 import hello.kpop.artist.errorHandler.ArtistResponseMessage;
-import hello.kpop.place.errorHandler.StatusCode;
+import hello.kpop.place.common.PageResponseDto;
+import hello.kpop.place.common.StatusCode;
 import hello.kpop.user.Role;
 import hello.kpop.user.User;
 import hello.kpop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -85,9 +86,24 @@ public class ArtistController {
     }
 
     //아티스트 전체 조회
+//    @GetMapping("/artist/list")
+//    public List<ArtistResponseDto> selectArtistList() {
+//        return artistService.selectArtistList();
+//    }
+
+    //페이징 + 아티스트 전체 조회
     @GetMapping("/artist/list")
-    public List<ArtistResponseDto> selectArtistList() {
-        return artistService.selectArtistList();
+    public ResponseEntity<ArtistResponseDto> pageArtist(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
+                                                        @RequestParam(required = false, defaultValue = "16", value = "size") int size) {
+        //page, size가 음수일 경우
+        if(page < 0 || size <= 0) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, ArtistResponseMessage.NON_NEGATIVE_VALUES), HttpStatus.BAD_REQUEST);
+        }
+
+        Page<Artist> result = artistService.pageArtistList(page -1, size);
+        List<Artist> list = result.getContent();
+
+        return new ResponseEntity(new PageResponseDto<>(list, result), HttpStatus.OK);
     }
 
     //선택한 아티스트 정보 조회

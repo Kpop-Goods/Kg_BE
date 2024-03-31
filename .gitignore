@@ -37,3 +37,18 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### data ###
+application-data.yml
+
+### jwt ###
+application-jwt.yml
+
+### mail ###
+application-mail.yml
+
+### oauth ###
+application-oauth.yml
+
+### s3 ###
+application-s3.yml

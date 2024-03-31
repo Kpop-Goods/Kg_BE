@@ -12,44 +12,46 @@ import jakarta.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "goods")
 public class Goods extends Base {
 
+    //상품 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 굿즈 번호
+    @Column(name = "goods_id")
+    private Long goodsId;
 
-    @Column(length=65, nullable = false)
-    private String goods_artistCode ; //아티스트 코드(조인필요??)
+    //아티스트 코드
+    @Column(name = "artist_cd", length=100, nullable = false)
+    private String artistCd ;
 
-    @Column(length = 50, nullable = false)
-    private String goods_name; // 굿즈 명
+    //상품 카테고리 코드
+    @Column(name = "goods_category_cd", nullable = false)
+    private Integer goodsCategoryCd;
 
+    //굿즈명
+    @Column(name = "goods_name", length = 500, nullable = false)
+    private String goodsName;
+
+    //내용
     @Lob
-    @Column(name = "description" ,length = 200)
-    private String desc; //굿즈 설명
+    @Column(name = "goods_content", columnDefinition = "TEXT")
+    private String goodsContent;
 
-    @Column(length = 100)
-    private String  imageUrl; //이미지 주소
+    //원본 링크
+    @Column(name = "goods_link", length = 4000)
+    private String goodsLink;
 
-    @Column(nullable = false)
-    private String sns_id; //sns 외부 아이디??
+    //조회수
+    @Column(name = "count")
+    private Integer count;
 
+    //삭제여부
+    @Column(name = "del_yn", length = 1, nullable = false)
+    private String delYN;
 
-    private int heart;
-
-
-       @ManyToOne(fetch= FetchType.LAZY)
-       @JoinColumn(name="userId")
-       private User userId;
-       
-
-
-    public void update(Goods goods){
-           this.goods_name = goods.goods_name;
-           this.desc = goods.desc;
-           this.imageUrl = goods.imageUrl;
-
-
-       }
+    //등록ID
+    @Column(name = "reg_id")
+    private String regId;
 
 }
