@@ -6,12 +6,16 @@ import hello.kpop.artist.dto.SuccessResponseDto;
 import hello.kpop.artist.repository.ArtistRepository;
 import hello.kpop.place.Place;
 import hello.kpop.place.PlaceSpecification;
+import hello.kpop.place.common.DefaultRes;
 import hello.kpop.place.dto.PlaceDto;
 import hello.kpop.place.dto.PlaceResponseDto;
+import hello.kpop.place.errorHandler.PlaceResponseMessage;
 import hello.kpop.place.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,26 +34,66 @@ public class PlaceService {
     private final ArtistRepository artistRepository;
 
     //이벤트/장소 등록
-    @Transactional
-    public PlaceResponseDto savePlace(PlaceDto requestDto, Long artistId) throws Exception{
+    public DefaultRes<PlaceResponseDto> savePlace(PlaceDto requestDto, Long artistId) {
+        try {
+            Artist artist = artistRepository.findById(artistId).orElseThrow(
+                    () -> new IllegalArgumentException(PlaceResponseMessage.NOT_FOUND_ARTIST_ID));
 
-        //이벤트/장소 중복 체크
-        if(placeRepository.findByAddress(requestDto.getAddress()).isPresent() && artistRepository.findById(artistId).isPresent()) {
-            throw new Exception("이미 등록된 이벤트 입니다.");
+            Place place = new Place(requestDto, artist);
+
+            // 이벤트/장소 중복 체크
+            if (placeRepository.findByAddress(requestDto.getAddress()).isPresent() &&
+                    place.getArtist().getArtistId() == requestDto.getArtistId()) {
+                throw new Exception(PlaceResponseMessage.OVERLAP_EVENT);
+            }
+
+            place.updateDelYN(DelStatus.DEFAULT);
+
+            placeRepository.save(place);
+
+            return DefaultRes.res(HttpStatus.OK.value(), PlaceResponseMessage.EVENT_REGISTER_SUCCESS, new PlaceResponseDto(place));
+        } catch (IllegalArgumentException ex) {
+            return DefaultRes.res(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        } catch (Exception ex) {
+            return DefaultRes.res(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
         }
+    }
+//    @Transactional
+//    public PlaceResponseDto savePlace(PlaceDto requestDto, Long artistId) throws Exception{
+//
+//        Artist artist = artistRepository.findById(artistId).orElseThrow(
+//                () -> new IllegalArgumentException("아티스트 ID가 존재하지 않습니다."));
+//
+//        Place place = new Place(requestDto, artist);
+//
+//        //이벤트/장소 중복 체크
+//        if(placeRepository.findByAddress(requestDto.getAddress()).isPresent() && place.getArtist().getArtistId() == requestDto.getArtistId()) {
+//            throw new Exception("이미 등록된 이벤트 입니다.");
+//        }
+//
+//        place.updateDelYN(DelStatus.DEFAULT);
+//
+//        placeRepository.save(place);
+//
+//        return new PlaceResponseDto(place);
+//    }
 
-        Artist artist = artistRepository.findById(artistId).orElseThrow(
-                () -> new IllegalArgumentException("아티스트 ID가 존재하지 않습니다."));
+    //페이징 + 이벤트/장소 전체 조회
+    @Transactional(readOnly = true)
+    public Page<Place> pagePlaceList(int page, int size) {
+        //삭제여부 "Y"인 데이터 가져옴
+        List<Place> places = placeRepository.findByDelYN("Y");
 
-        Place place = new Place(requestDto, artist);
+        //전체 데이터 조회
+        Pageable pageable = PageRequest.of(page, size, Sort.by("placeId").descending());
+        Page<Place> placePage = placeRepository.findAll(pageable);
 
-        //등록 시 삭제여부는 N으로 설정
-//        place.setDelYN("N");
-        place.updateDelYN(DelStatus.DEFAULT);
+        //"Y"인 데이터를 제외한 후 반환
+        List<Place> filteredPlaces = placePage.getContent().stream()
+                .filter(place -> !places.contains(place))
+                .collect(Collectors.toList());
 
-        placeRepository.save(place);
-
-        return new PlaceResponseDto(place);
+        return new PageImpl<>(filteredPlaces, pageable, placePage.getTotalElements());
     }
 
     //이벤트/장소 전체 조회

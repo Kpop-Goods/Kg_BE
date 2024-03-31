@@ -1,4 +1,4 @@
-package hello.kpop.place.errorHandler;
+package hello.kpop.place.common;
 
 public class StatusCode {
     public static final int OK = 200;

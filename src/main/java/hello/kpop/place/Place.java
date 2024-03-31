@@ -1,6 +1,7 @@
 package hello.kpop.place;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.kpop.artist.Artist;
 import hello.kpop.place.dto.PlaceDto;
 import lombok.*;
@@ -105,6 +106,7 @@ public class Place extends BaseTimeEntity {
     private String regId;
 
     //Artist 조인
+    @JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "artist_fk")
     private Artist artist; //fk(=Artist_pk)

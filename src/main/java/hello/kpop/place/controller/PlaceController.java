@@ -1,15 +1,15 @@
 package hello.kpop.place.controller;
 
 import hello.kpop.artist.dto.SuccessResponseDto;
-import hello.kpop.artist.errorHandler.ArtistResponseMessage;
 import hello.kpop.artist.repository.ArtistRepository;
 import hello.kpop.place.Place;
-import hello.kpop.place.dto.MultiResponseDto;
+import hello.kpop.place.common.MultiResponseDto;
+import hello.kpop.place.common.PageResponseDto;
 import hello.kpop.place.dto.PlaceDto;
 import hello.kpop.place.dto.PlaceResponseDto;
-import hello.kpop.place.errorHandler.DefaultRes;
+import hello.kpop.place.common.DefaultRes;
 import hello.kpop.place.errorHandler.PlaceResponseMessage;
-import hello.kpop.place.errorHandler.StatusCode;
+import hello.kpop.place.common.StatusCode;
 import hello.kpop.place.repository.PlaceRepository;
 import hello.kpop.place.service.PlaceService;
 import hello.kpop.user.Role;
@@ -17,6 +17,7 @@ import hello.kpop.user.User;
 import hello.kpop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,9 +50,9 @@ public class PlaceController {
         }
 
         //이벤트 중복 등록 방지
-        if(placeRepository.findByAddress(requestDto.getAddress()).isPresent() && artistRepository.findById(artistId).isPresent()) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.CONFLICT, PlaceResponseMessage.OVERLAP_EVENT), HttpStatus.CONFLICT);
-        }
+//        if(placeRepository.findByAddress(requestDto.getAddress()).isPresent() && place.getArtist().getArtistId() == requestDto.getArtistId()) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.CONFLICT, PlaceResponseMessage.OVERLAP_EVENT), HttpStatus.CONFLICT);
+//        }
 
         //아티스트 ID가 일치하는 게 없을 시 실행
         if(!(artistRepository.findById(artistId).isPresent())) {
@@ -101,9 +102,25 @@ public class PlaceController {
     }
 
     //이벤트 장소 전체 조회
+//    @GetMapping("/place/list")
+//    public List<PlaceResponseDto> selectPlaceList() {
+//        return placeService.selectPlaceList();
+//    }
+
+    //페이징 + 이벤트 장소 전체 조회
     @GetMapping("/place/list")
-    public List<PlaceResponseDto> selectPlaceList() {
-        return placeService.selectPlaceList();
+    public ResponseEntity<PlaceResponseDto> pagePlace(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
+                                                      @RequestParam(required = false, defaultValue = "4", value = "size") int size) {
+
+        //page, size가 음수일 경우
+        if(page < 0 || size <= 0) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, PlaceResponseMessage.NON_NEGATIVE_VALUES), HttpStatus.BAD_REQUEST);
+        }
+
+        Page<Place> result = placeService.pagePlaceList(page -1, size);
+        List<Place> list = result.getContent();
+
+        return new ResponseEntity(new PageResponseDto<>(list, result), HttpStatus.OK);
     }
 
     //이벤트 장소 상세 조회

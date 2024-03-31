@@ -1,4 +1,4 @@
-package hello.kpop.place.errorHandler;
+package hello.kpop.place.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
