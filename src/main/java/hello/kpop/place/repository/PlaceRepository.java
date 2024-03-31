@@ -2,6 +2,7 @@ package hello.kpop.place.repository;
 
 import hello.kpop.artist.Artist;
 import hello.kpop.place.Place;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
