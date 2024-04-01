@@ -13,10 +13,12 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@Table(name = "board")
 public class NoticeBoard extends Base{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notice_id")
     private Long noticeId; //공지사항 게시글 번호
 
     private String type; //게시글 종류??
@@ -29,14 +31,14 @@ public class NoticeBoard extends Base{
     @Column(length = 200,nullable = false)
     private String content; //내용
 
-    @Column(length = 15)
+    @Column(name = "img_url", length = 15)
     private String imgUrl; //이미지
 
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int view; //조회수 null은 불가 기본값은 0으로시작
 
     @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="userid")
+    @JoinColumn(name="user_fk")
     private User userId; //유저 아이디
 
     //request 정보를 가져와 entity 만들 때 사용
@@ -48,10 +50,8 @@ public class NoticeBoard extends Base{
         this.imgUrl=requestDto.getImgUrl();
     }
 
-
     // 수정시 사용할 매서드
     public void modifyBoardInfo(BoardRequestDto requestDto){
-
         this.type=requestDto.getType();
         this.password =requestDto.getPassword();
         this.subject=requestDto.getSubject();

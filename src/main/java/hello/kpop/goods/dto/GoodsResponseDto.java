@@ -11,16 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GoodsResponseDto {
 
+    private Long goodsId;
+    private String artistCd ;
+    private Integer goodsCategoryCd;
+    private String goodsName;
+    private String goodsContent;
+    private String goodsLink;
+    private Integer count;
+    private String delYN;
+    private String regId;
 
-    private Long id;
-    private String goods_name;
-    private String desc;
-    private String imageUrl;
-
-    public GoodsResponseDto(Goods goods) {
-        this.id = goods.getId();
-        this.goods_name = goods.getGoods_name();
-        this.desc = goods.getDesc();
-        this.imageUrl= goods.getImageUrl();
-    }
 }

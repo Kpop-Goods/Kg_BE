@@ -10,13 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GoodsRequestDto {
 
-
-    private Long id;
-    private String goods_name;
-    private String desc;
-    private String imageUrl;
-    private String userId;
-
-
+    private String artistCd ;
+    private Integer goodsCategoryCd;
+    private String goodsName;
+    private String goodsContent;
+    private String goodsLink;
+    private String regId;
 
 }

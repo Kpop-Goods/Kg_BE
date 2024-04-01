@@ -63,4 +63,5 @@ public class PlaceResponseDto {
         this.artistId = entity.getArtist().getArtistId();
         this.agencyId = entity.getArtist().getAgency().getAgencyId();
     }
+
 }

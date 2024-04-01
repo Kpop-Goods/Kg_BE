@@ -10,32 +10,13 @@ server:
 spring:
   # 프로필 설정
   profiles:
-    active: dev
-    include: oauth, jwt
+   # active: dev
+    include: oauth, jwt, data, mail, s3
   application:
     name: user-service
   main:
     allow-circular-references: true
     allow-bean-definition-overriding: true
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.31.40.166:3306/kpop?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: admin
-    password: 12345678
-#    url: jdbc:mysql://localhost:3306/kpop?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-#    username: root
-#    password: 1234
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: kgoodsdev@gmail.com
-    password: qgjr htqp aiyj usvb
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
   data:
     redis:
       host: localhost

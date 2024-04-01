@@ -1,4 +1,4 @@
-package hello.kpop.place.dto;
+package hello.kpop.place.common;
 
 import lombok.Builder;
 import lombok.Getter;

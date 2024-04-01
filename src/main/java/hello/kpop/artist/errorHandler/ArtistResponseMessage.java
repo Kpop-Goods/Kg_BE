@@ -18,4 +18,5 @@ public class ArtistResponseMessage {
     public static final String UNAUTHORIZED_ARTIST_DELETE = "아티스트 삭제 실패, 권한이 없습니다.";
     public static final String DELETE_ARTIST_SUCCESS = "아티스트 삭제 성공";
     public static final String DELETED_ARTIST = "삭제된 아티스트입니다.";
+    public static final String NON_NEGATIVE_VALUES = "양수만 가능합니다.";
 }

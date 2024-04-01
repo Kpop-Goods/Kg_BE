@@ -20,4 +20,5 @@ public class PlaceResponseMessage {
     public static final String DELETE_PLACE_FAIL = "이벤트 삭제 실패, 이벤트 ID가 존재하지 않습니다.";
     public static final String UNAUTHORIZED_EVENT_DELETE = "이벤트 삭제 실패, 권한이 없습니다.";
     public static final String DELETED_PLACE = "삭제된 이벤트입니다.";
+    public static final String NON_NEGATIVE_VALUES = "양수만 가능합니다.";
 }
