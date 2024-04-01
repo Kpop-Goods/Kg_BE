@@ -1,16 +1,9 @@
 package hello.kpop.follow;
 
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import org.springframework.data.neo4j.core.schema.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter

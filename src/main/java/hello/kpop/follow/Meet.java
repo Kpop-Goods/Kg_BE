@@ -1,10 +1,10 @@
 package hello.kpop.follow;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+
 
 @Getter
 @Setter
