@@ -1,4 +1,4 @@
-package hello.kpop.socialing.common;
+package hello.kpop.socialing;
 
 
 //소셜링 상태 타입

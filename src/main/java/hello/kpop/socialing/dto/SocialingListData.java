@@ -1,8 +1,8 @@
 package hello.kpop.socialing.dto;
 
 
-import hello.kpop.socialing.Socialing;
-import hello.kpop.socialing.common.SocialingStatus;
+import hello.kpop.socialing.entity.Socialing;
+import hello.kpop.socialing.SocialingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +17,7 @@ public class SocialingListData {
  private String nickname;
  private String artistName;
  private String agency;
+ private String place;
  private String socialingName;
  private SocialingStatus del_yn;
  private int quota;
@@ -30,6 +31,7 @@ public class SocialingListData {
   this.nickname = socialing.getUser().getNickname();
   this.artistName = socialing.getArtist().getArtistName();
   this.agency = socialing.getArtist().getAgency().getAgencyName();
+  this.place = socialing.getSocial_place();
   this.socialingName = socialing.getSocialing_name();
   this.del_yn = socialing.getDel_yn();
   this.view=socialing.getView();

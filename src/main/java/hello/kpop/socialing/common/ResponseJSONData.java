@@ -26,8 +26,13 @@ public class ResponseJSONData<T> {
     private Object message;
 
     public ResponseJSONData( T data, Object message) {
-
         this.data = data;
+        this.message = message;
+    }
+
+    public ResponseJSONData(T data , HttpStatus status, Object message ){
+        this.data = data;
+        this.status = status;
         this.message = message;
     }
 }

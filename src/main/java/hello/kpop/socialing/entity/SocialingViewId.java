@@ -1,4 +1,4 @@
-package hello.kpop.socialing.dto;
+package hello.kpop.socialing.entity;
 
 
 import lombok.AllArgsConstructor;

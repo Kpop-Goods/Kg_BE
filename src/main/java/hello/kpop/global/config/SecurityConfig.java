@@ -74,6 +74,7 @@ public class SecurityConfig {
                         .requestMatchers("/agency/**").permitAll()
                         .requestMatchers("/artist/**").permitAll()
                         .requestMatchers("/place/**").permitAll()
+                        .requestMatchers("/board/**").permitAll()
                         .requestMatchers("/image/**").permitAll()
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
 

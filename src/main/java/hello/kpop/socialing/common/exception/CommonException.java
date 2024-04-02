@@ -1,4 +1,4 @@
-package hello.kpop.socialing.exception;
+package hello.kpop.socialing.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;
