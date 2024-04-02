@@ -1,9 +1,9 @@
 package hello.kpop.socialing;
 
 
-import hello.kpop.socialing.common.ProcessUtils;
-import hello.kpop.socialing.exception.CommonException;
 import hello.kpop.socialing.common.ResponseJSONData;
+import hello.kpop.socialing.common.Utils;
+import hello.kpop.socialing.common.exception.CommonException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestControllerAdvice("hello.kpop.socialing")
 @RequiredArgsConstructor
-public class CommonAdvice {
+public class SocialingAdvice {
 
     private final Utils utils;
 
@@ -35,7 +35,7 @@ public class CommonAdvice {
                 if (messages != null && !messages.isEmpty()) message = messages;
             }
         }else {
-            message= ProcessUtils.getMessage("Internal","errors");
+            //message= ProcessUtils.getMessage("Internal","errors");
         }
 
         e.printStackTrace();

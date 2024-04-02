@@ -1,7 +1,7 @@
 package hello.kpop.socialing.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import hello.kpop.socialing.common.SocialingStatus;
+import hello.kpop.socialing.SocialingStatus;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +25,7 @@ public class SocialingData {
     private String nickname; // 등록한 유저 닉네임
 
     @NotBlank
-    private String artist; //아티스트 이름
+    private String artistName; //아티스트 이름
 
     @NotBlank
     private String socialing_name; //제목
@@ -51,9 +51,10 @@ public class SocialingData {
     @Max(value = 10)
     private int quota;//모집 인원
 
-//    @Pattern(regexp = "^(https?|ftp)://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+([/?].*)?$")
+    //    @Pattern(regexp = "^(https?|ftp)://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+([/?].*)?$")
     private String chat_url;// 외부 채팅 링크
 
+    @NotNull
     private SocialingStatus del_yn; // 모집 여부
 
 

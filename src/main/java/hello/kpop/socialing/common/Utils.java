@@ -1,4 +1,4 @@
-package hello.kpop.socialing;
+package hello.kpop.socialing.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;

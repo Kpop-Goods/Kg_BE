@@ -1,8 +1,8 @@
-package hello.kpop.socialing;
+package hello.kpop.socialing.entity;
 
 import hello.kpop.artist.Artist;
-import hello.kpop.board.dto.Base;
-import hello.kpop.socialing.common.SocialingStatus;
+import hello.kpop.socialing.common.entitiy.Base;
+import hello.kpop.socialing.SocialingStatus;
 import hello.kpop.socialing.dto.SocialingData;
 import hello.kpop.user.User;
 import jakarta.persistence.*;

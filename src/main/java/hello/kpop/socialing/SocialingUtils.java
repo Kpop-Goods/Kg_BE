@@ -1,4 +1,4 @@
-package hello.kpop.socialing.common;
+package hello.kpop.socialing;
 
 
 import hello.kpop.user.Role;

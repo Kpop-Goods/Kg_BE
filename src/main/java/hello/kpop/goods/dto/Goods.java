@@ -1,8 +1,7 @@
 package hello.kpop.goods.dto;
 
 
-import hello.kpop.board.dto.Base;
-import hello.kpop.user.User;
+import hello.kpop.socialing.common.entitiy.Base;
 import lombok.*;
 
 import jakarta.persistence.*;

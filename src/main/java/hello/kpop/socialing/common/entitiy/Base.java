@@ -1,4 +1,4 @@
-package hello.kpop.board.dto;
+package hello.kpop.socialing.common.entitiy;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
