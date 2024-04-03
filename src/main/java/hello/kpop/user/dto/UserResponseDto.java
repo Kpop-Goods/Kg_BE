@@ -18,6 +18,7 @@ public class UserResponseDto {
     private Role userType;
     private SocialType socialType;
     private String socialId;
+    private Integer followCnt;
 
     public UserResponseDto(User entity) {
         this.id = entity.getId();
@@ -27,5 +28,6 @@ public class UserResponseDto {
         this.userType = entity.getUserType();
         this.socialType = entity.getSocialType();
         this.socialId = entity.getSocialId();
+        this.followCnt = entity.getFollowCnt();
     }
 }

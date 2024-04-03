@@ -3,7 +3,11 @@ package hello.kpop.user.repository;
 import hello.kpop.user.SocialType;
 import hello.kpop.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +22,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByRefreshToken(String refreshToken);
 
     List<User> findAll();
+
+    // 잠금횟수 증가 로직
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.lockCnt = u.lockCnt + 1 WHERE u.userEmail = :userEmail")
+    void incrementLockCount(@Param("userEmail") String userEmail);
 
     /**
      * 소셜 타입과 소셜의 식별값으로 회원 찾는 메소드

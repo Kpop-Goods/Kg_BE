@@ -4,21 +4,37 @@ import hello.kpop.artist.Artist;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 public class ArtistResponseDto {
 
     private Long artistId;
-    private String artistImg;
-    private String artistContent;
+    private String artistCd;
     private String artistName;
-    private int artistCount;
+    private String comment;
+    private int followCnt;
+    private String gender;
+    private String unitYN;
+    private String delYN;
+    private String regId;
+    private LocalDateTime regDt;
+    private LocalDateTime modDt;
+    private Long agencyId;
 
     public ArtistResponseDto(Artist entity) {
         this.artistId = entity.getArtistId();
-        this.artistImg = entity.getArtistImg();
-        this.artistContent = entity.getArtistContent();
+        this.artistCd = entity.getArtistCd();
         this.artistName = entity.getArtistName();
-        this.artistCount = entity.getArtistCount();
+        this.comment = entity.getComment();
+        this.followCnt = entity.getFollowCnt();
+        this.gender = entity.getGender();
+        this.unitYN = entity.getUnitYN();
+        this.delYN = entity.getDelYN();
+        this.regId = entity.getRegId();
+        this.regDt = entity.getRegDt();
+        this.modDt = entity.getModDt();
+        this.agencyId = entity.getAgency().getAgencyId();
     }
 }
