@@ -33,50 +33,55 @@ public class PlaceService {
     private final PlaceRepository placeRepository;
     private final ArtistRepository artistRepository;
 
-    //이벤트/장소 등록
-    public DefaultRes<PlaceResponseDto> savePlace(PlaceDto requestDto, Long artistId) {
-        try {
-            Artist artist = artistRepository.findById(artistId).orElseThrow(
-                    () -> new IllegalArgumentException(PlaceResponseMessage.NOT_FOUND_ARTIST_ID));
-
-            Place place = new Place(requestDto, artist);
-
-            // 이벤트/장소 중복 체크
-            if (placeRepository.findByAddress(requestDto.getAddress()).isPresent() &&
-                    place.getArtist().getArtistId() == requestDto.getArtistId()) {
-                throw new Exception(PlaceResponseMessage.OVERLAP_EVENT);
-            }
-
-            place.updateDelYN(DelStatus.DEFAULT);
-
-            placeRepository.save(place);
-
-            return DefaultRes.res(HttpStatus.OK.value(), PlaceResponseMessage.EVENT_REGISTER_SUCCESS, new PlaceResponseDto(place));
-        } catch (IllegalArgumentException ex) {
-            return DefaultRes.res(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        } catch (Exception ex) {
-            return DefaultRes.res(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
-        }
-    }
 //    @Transactional
-//    public PlaceResponseDto savePlace(PlaceDto requestDto, Long artistId) throws Exception{
+//    //이벤트/장소 등록
+//    public DefaultRes<PlaceResponseDto> savePlace(PlaceDto requestDto, Long artistId) {
+//        try {
+//            Artist artist = artistRepository.findById(artistId).orElseThrow(
+//                    () -> new IllegalArgumentException(PlaceResponseMessage.NOT_FOUND_ARTIST_ID));
 //
-//        Artist artist = artistRepository.findById(artistId).orElseThrow(
-//                () -> new IllegalArgumentException("아티스트 ID가 존재하지 않습니다."));
+//            Place place = new Place(requestDto, artist);
 //
-//        Place place = new Place(requestDto, artist);
+//            // 이벤트/장소 중복 체크
+//            if (placeRepository.findByAddress(requestDto.getAddress()).equals(requestDto.getAddress()) &&
+//                    place.getArtist().getArtistId() == requestDto.getArtistId()) {
+//                //throw new Exception(PlaceResponseMessage.OVERLAP_EVENT);
+//                return DefaultRes.res(HttpStatus.INTERNAL_SERVER_ERROR.value(), PlaceResponseMessage.OVERLAP_EVENT);
+//            }
 //
-//        //이벤트/장소 중복 체크
-//        if(placeRepository.findByAddress(requestDto.getAddress()).isPresent() && place.getArtist().getArtistId() == requestDto.getArtistId()) {
-//            throw new Exception("이미 등록된 이벤트 입니다.");
+//            place.updateDelYN(DelStatus.DEFAULT);
+//
+//            placeRepository.save(place);
+//
+//            return DefaultRes.res(HttpStatus.OK.value(), PlaceResponseMessage.EVENT_REGISTER_SUCCESS, new PlaceResponseDto(place));
+//        } catch (IllegalArgumentException ex) {
+//            return DefaultRes.res(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+//        } catch (Exception ex) {
+//            return DefaultRes.res(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
 //        }
-//
-//        place.updateDelYN(DelStatus.DEFAULT);
-//
-//        placeRepository.save(place);
-//
-//        return new PlaceResponseDto(place);
 //    }
+
+    @Transactional
+    public PlaceResponseDto savePlace(PlaceDto requestDto, Long artistId) throws Exception{
+
+        Artist artist = artistRepository.findById(artistId).orElseThrow(
+                () -> new IllegalArgumentException("아티스트 ID가 존재하지 않습니다."));
+
+        Place place = new Place(requestDto, artist);
+
+        //이벤트/장소 중복 체크
+//            if(placeRepository.findByAddress(requestDto.getAddress()).isPresent() && place.getArtist().getArtistId() == requestDto.getArtistId()) {
+//                //throw new Exception("이미 등록된 이벤트 입니다.");
+//                log.info("savePlace service2:{}", placeRepository.findByAddress(requestDto.getAddress()));
+//                throw new Exception(PlaceResponseMessage.OVERLAP_EVENT);
+//            }
+
+        place.updateDelYN(DelStatus.DEFAULT);
+
+        placeRepository.save(place);
+
+        return new PlaceResponseDto(place);
+    }
 
     //페이징 + 이벤트/장소 전체 조회
     @Transactional(readOnly = true)
@@ -85,7 +90,7 @@ public class PlaceService {
         List<Place> places = placeRepository.findByDelYN("Y");
 
         //전체 데이터 조회
-        Pageable pageable = PageRequest.of(page, size, Sort.by("placeId").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("eventId").descending());
         Page<Place> placePage = placeRepository.findAll(pageable);
 
         //"Y"인 데이터를 제외한 후 반환

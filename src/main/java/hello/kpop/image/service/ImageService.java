@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -18,22 +20,14 @@ import java.io.IOException;
 public class ImageService {
 
     private final ImageRepository imageRepository;
-    private final S3Uploader s3Uploader;
 
     @Transactional
-    public ImageResponseDto registerImage(ImageDto requestDto, MultipartFile image) throws IOException {
-
-        Image imageEntity = new Image();
-
-        if(!image.isEmpty()) {
-            String storedFileName = s3Uploader.upload(image,"images");
-            requestDto.setImageUrl(storedFileName);
+    public void registerImage(List<String> multipartFiles) {
+        List<String> imgList = new ArrayList<>();
+        for (String imgUrl : multipartFiles) {
+            Image img = new Image(imgUrl);
+            imageRepository.save(img);
+            imgList.add(img.getImageUrl());
         }
-
-        Image savedImage = new Image(requestDto);
-        imageRepository.save(savedImage);
-
-        return new ImageResponseDto(savedImage);
-
     }
 }

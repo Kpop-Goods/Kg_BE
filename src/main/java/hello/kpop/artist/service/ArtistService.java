@@ -41,7 +41,6 @@ public class ArtistService {
         Artist artist = new Artist(requestDto, agency);
 
         //등록 시 삭제여부는 N으로 설정
-//        artist.setDelYN("N");
         artist.updateDelYN(DelStatus.DEFAULT);
 
         artistRepository.save(artist);
@@ -122,7 +121,6 @@ public class ArtistService {
         Artist artist = artistRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아티스트 ID가 존재하지 않습니다."));
 
-//        artist.setDelYN("Y");
         artist.updateDelYN(DelStatus.DELETE);
 
         return new SuccessResponseDto(true);
