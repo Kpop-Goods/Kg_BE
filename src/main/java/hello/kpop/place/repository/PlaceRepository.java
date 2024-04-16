@@ -29,5 +29,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long>, JpaSpecific
 
     //이벤트 등록 시 중복 등록 방지2
 //    Optional<Place> findByArtistId(Artist artist);
+//    @Query("SELECT p.artist.artistId FROM Place p WHERE p.eventId = :eventId")
+//    Long findArtistIdByEventId(@Param("eventId") Long eventId);
 
 }
