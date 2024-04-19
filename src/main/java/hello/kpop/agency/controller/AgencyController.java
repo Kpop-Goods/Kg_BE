@@ -34,12 +34,12 @@ public class AgencyController {
 
     //소속사 등록
     @PostMapping("/agency")
-    public ResponseEntity<AgencyResponseDto> saveAgency(@RequestBody AgencyDto requestDto, Authentication authentication) throws Exception {
+    public ResponseEntity<AgencyResponseDto> saveAgency(@RequestBody AgencyDto requestDto/*, Authentication authentication*/) throws Exception {
 
         //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
-        if(authentication == null) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_REGISTER), HttpStatus.UNAUTHORIZED);
-        }
+//        if(authentication == null) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_REGISTER), HttpStatus.UNAUTHORIZED);
+//        }
 
         //소속사 중복 등록 방지
         if(agencyRepository.findByAgencyName(requestDto.getAgencyName()).isPresent()) {
@@ -56,18 +56,19 @@ public class AgencyController {
             return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, AgencyResponseMessage.AGENCY_NAME_NOT_ENTERED), HttpStatus.BAD_REQUEST);
         }
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
 
-        if (user.getUserType() == Role.ADMIN) {
-            //ADMIN 시 실행
-            requestDto.updateRegId(user.getNickname());
-            log.info("유저닉네임:" + user.getNickname());
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, AgencyResponseMessage.AGENCY_REGISTER_SUCCESS, agencyService.saveAgency(requestDto)),HttpStatus.OK);
-        } else {
-            //ADMIN이 아닐 시 실행
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_REGISTER), HttpStatus.UNAUTHORIZED);
-        }
+//        if (user.getUserType() == Role.ADMIN) {
+//            //ADMIN 시 실행
+//            requestDto.updateRegId(user.getNickname());
+//            log.info("유저닉네임:" + user.getNickname());
+//            return new ResponseEntity(DefaultRes.res(StatusCode.OK, AgencyResponseMessage.AGENCY_REGISTER_SUCCESS, agencyService.saveAgency(requestDto)),HttpStatus.OK);
+//        } else {
+//            //ADMIN이 아닐 시 실행
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_REGISTER), HttpStatus.UNAUTHORIZED);
+//        }
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, AgencyResponseMessage.AGENCY_REGISTER_SUCCESS, agencyService.saveAgency(requestDto)),HttpStatus.OK);
     }
 
     //소속사 전체 조회 (아티스트 포함됨)
@@ -99,12 +100,12 @@ public class AgencyController {
 
     //선택한 소속사 정보 수정
     @PutMapping("/agency/{agencyId}")
-    public ResponseEntity<AgencyResponseDto> updateAgency(@PathVariable Long agencyId, @RequestBody AgencyDto requestDto, Authentication authentication) throws Exception {
+    public ResponseEntity<AgencyResponseDto> updateAgency(@PathVariable Long agencyId, @RequestBody AgencyDto requestDto/*, Authentication authentication*/) throws Exception {
 
         //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
-        if(authentication == null) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_UPDATE), HttpStatus.UNAUTHORIZED);
-        }
+//        if(authentication == null) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_UPDATE), HttpStatus.UNAUTHORIZED);
+//        }
 
         Optional<Agency> agencyOptional = agencyRepository.findById(agencyId);
 
@@ -121,25 +122,26 @@ public class AgencyController {
             return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, AgencyResponseMessage.DELETED_AGENCY), HttpStatus.NOT_FOUND);
         }
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
-
-        //관리자만 수정가능
-        if(agency.getRegId().equals(user.getNickname())) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, AgencyResponseMessage.UPDATE_AGENCY_SUCCESS, agencyService.updateAgency(agencyId, requestDto)),HttpStatus.OK);
-        } else {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_UPDATE), HttpStatus.UNAUTHORIZED);
-        }
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+//
+//        //관리자만 수정가능
+//        if(agency.getRegId().equals(user.getNickname())) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.OK, AgencyResponseMessage.UPDATE_AGENCY_SUCCESS, agencyService.updateAgency(agencyId, requestDto)),HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_UPDATE), HttpStatus.UNAUTHORIZED);
+//        }
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, AgencyResponseMessage.UPDATE_AGENCY_SUCCESS, agencyService.updateAgency(agencyId, requestDto)),HttpStatus.OK);
     }
 
     //선택한 소속사 삭제
     @DeleteMapping("/agency/{agencyId}")
-    public ResponseEntity<SuccessResponseDto> deleteAgency(@PathVariable Long agencyId, Authentication authentication) throws Exception {
+    public ResponseEntity<SuccessResponseDto> deleteAgency(@PathVariable Long agencyId/*, Authentication authentication*/) throws Exception {
 
         //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
-        if(authentication == null) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_DELETE), HttpStatus.UNAUTHORIZED);
-        }
+//        if(authentication == null) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_DELETE), HttpStatus.UNAUTHORIZED);
+//        }
 
         //소속사 ID가 일치하는 게 없을 시 실행
         if(!(agencyRepository.findById(agencyId).isPresent())) {
@@ -149,14 +151,15 @@ public class AgencyController {
         Optional<Agency> agencyOptional = agencyRepository.findById(agencyId);
         Agency agency = agencyOptional.get();
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
-
-        //관리자만 수정가능
-        if(agency.getRegId().equals(user.getNickname())) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, AgencyResponseMessage.DELETE_AGENCY_SUCCESS, agencyService.deleteAgency(agencyId)),HttpStatus.OK);
-        } else {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_DELETE), HttpStatus.UNAUTHORIZED);
-        }
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+//
+//        //관리자만 수정가능
+//        if(agency.getRegId().equals(user.getNickname())) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.OK, AgencyResponseMessage.DELETE_AGENCY_SUCCESS, agencyService.deleteAgency(agencyId)),HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, AgencyResponseMessage.UNAUTHORIZED_AGENCY_DELETE), HttpStatus.UNAUTHORIZED);
+//        }
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, AgencyResponseMessage.DELETE_AGENCY_SUCCESS, agencyService.deleteAgency(agencyId)),HttpStatus.OK);
     }
 }
