@@ -6,6 +6,7 @@ import hello.kpop.agency.status.DelStatus;
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.ArtistSpecification;
 import hello.kpop.artist.dto.AgencyArtistListDto;
+
 import hello.kpop.artist.dto.ArtistDto;
 import hello.kpop.artist.dto.ArtistResponseDto;
 import hello.kpop.artist.dto.SuccessResponseDto;
@@ -54,7 +55,7 @@ public class ArtistService {
     public List<AgencyArtistListDto> selectArtistAgency() {
         return artistRepository.findAll().stream().map(AgencyArtistListDto::new).toList();
     }
-
+  
     //페이징 + 아티스트 전체 조회
     @Transactional(readOnly = true)
     public Page<Artist> pageArtistList(int page, int size) {
