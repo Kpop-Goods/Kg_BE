@@ -5,6 +5,7 @@ import hello.kpop.agency.repository.AgencyRepository;
 import hello.kpop.agency.status.DelStatus;
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.ArtistSpecification;
+import hello.kpop.artist.dto.ArtistAgencyDto;
 import hello.kpop.artist.dto.ArtistDto;
 import hello.kpop.artist.dto.ArtistResponseDto;
 import hello.kpop.artist.dto.SuccessResponseDto;
@@ -48,6 +49,12 @@ public class ArtistService {
         return new ArtistResponseDto(artist);
     }
 
+    //아티스트ID, 아티스트명, 소속샤ID, 소속사명 전체 조회
+    @Transactional
+    public List<ArtistAgencyDto> selectArtistAgency() {
+        return artistRepository.findAll().stream().map(ArtistAgencyDto::new).toList();
+    }
+
     //페이징 + 아티스트 전체 조회
     @Transactional(readOnly = true)
     public Page<Artist> pageArtistList(int page, int size) {
@@ -67,24 +74,24 @@ public class ArtistService {
     }
 
     //아티스트 전체 조회
-    @Transactional
-    public List<ArtistResponseDto> selectArtistList() {
-
-        //삭제여부 "Y"인 데이터 가져옴
-        List<Artist> artists = artistRepository.findByDelYN("Y");
-
-        if(artists.isEmpty()) { //"Y"인 데이터가 없을 경우 전체 데이터 조회
-            return artistRepository.findAll().stream().map(ArtistResponseDto::new).toList();
-        } else {
-            //"Y"인 데이터를 제외한 후 반환
-            List<ArtistResponseDto> responseDtoList = artistRepository.findAll()
-                    .stream()
-                    .filter(artist -> !artists.contains(artist))
-                    .map(ArtistResponseDto::new)
-                    .collect(Collectors.toList());
-            return responseDtoList;
-        }
-    }
+//    @Transactional
+//    public List<ArtistResponseDto> selectArtistList() {
+//
+//        //삭제여부 "Y"인 데이터 가져옴
+//        List<Artist> artists = artistRepository.findByDelYN("Y");
+//
+//        if(artists.isEmpty()) { //"Y"인 데이터가 없을 경우 전체 데이터 조회
+//            return artistRepository.findAll().stream().map(ArtistResponseDto::new).toList();
+//        } else {
+//            //"Y"인 데이터를 제외한 후 반환
+//            List<ArtistResponseDto> responseDtoList = artistRepository.findAll()
+//                    .stream()
+//                    .filter(artist -> !artists.contains(artist))
+//                    .map(ArtistResponseDto::new)
+//                    .collect(Collectors.toList());
+//            return responseDtoList;
+//        }
+//    }
 
     //선택한 아티스트 정보 상세 조회
     @Transactional
