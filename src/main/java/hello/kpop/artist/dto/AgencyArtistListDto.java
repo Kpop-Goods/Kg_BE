@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ArtistAgencyDto {
+public class AgencyArtistListDto {
 
     private Long artistId;
     private String artistName;
     private Long agencyId;
     private String agencyName;
 
-    public ArtistAgencyDto(Artist entity) {
+    public AgencyArtistListDto(Artist entity) {
         this.artistId = entity.getArtistId();
         this.artistName = entity.getArtistName();
         this.agencyId = entity.getAgency().getAgencyId();
