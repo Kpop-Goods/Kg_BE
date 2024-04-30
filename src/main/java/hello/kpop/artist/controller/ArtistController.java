@@ -2,7 +2,6 @@ package hello.kpop.artist.controller;
 
 import hello.kpop.agency.repository.AgencyRepository;
 import hello.kpop.artist.Artist;
-import hello.kpop.artist.dto.ArtistAgencyDto;
 import hello.kpop.artist.dto.ArtistDto;
 import hello.kpop.artist.dto.ArtistResponseDto;
 import hello.kpop.artist.dto.SuccessResponseDto;
@@ -86,12 +85,6 @@ public class ArtistController {
 //        }
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.ARTIST_REGISTER_SUCCESS, artistService.saveArtist(requestDto, agencyId)), HttpStatus.OK);
 
-    }
-
-    //아티스트ID, 아티스트명, 소속샤ID, 소속사명 전체 조회
-    @GetMapping("/artist/agency")
-    public List<ArtistAgencyDto> selectArtistAgency() {
-        return artistService.selectArtistAgency();
     }
 
     //페이징 + 아티스트 전체 조회
