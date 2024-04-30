@@ -74,24 +74,24 @@ public class ArtistService {
     }
 
     //아티스트 전체 조회
-//    @Transactional
-//    public List<ArtistResponseDto> selectArtistList() {
-//
-//        //삭제여부 "Y"인 데이터 가져옴
-//        List<Artist> artists = artistRepository.findByDelYN("Y");
-//
-//        if(artists.isEmpty()) { //"Y"인 데이터가 없을 경우 전체 데이터 조회
-//            return artistRepository.findAll().stream().map(ArtistResponseDto::new).toList();
-//        } else {
-//            //"Y"인 데이터를 제외한 후 반환
-//            List<ArtistResponseDto> responseDtoList = artistRepository.findAll()
-//                    .stream()
-//                    .filter(artist -> !artists.contains(artist))
-//                    .map(ArtistResponseDto::new)
-//                    .collect(Collectors.toList());
-//            return responseDtoList;
-//        }
-//    }
+    @Transactional
+    public List<ArtistResponseDto> selectArtistList() {
+
+        //삭제여부 "Y"인 데이터 가져옴
+        List<Artist> artists = artistRepository.findByDelYN("Y");
+
+        if(artists.isEmpty()) { //"Y"인 데이터가 없을 경우 전체 데이터 조회
+            return artistRepository.findAll().stream().map(ArtistResponseDto::new).toList();
+        } else {
+            //"Y"인 데이터를 제외한 후 반환
+            List<ArtistResponseDto> responseDtoList = artistRepository.findAll()
+                    .stream()
+                    .filter(artist -> !artists.contains(artist))
+                    .map(ArtistResponseDto::new)
+                    .collect(Collectors.toList());
+            return responseDtoList;
+        }
+    }
 
     //선택한 아티스트 정보 상세 조회
     @Transactional
