@@ -2,7 +2,7 @@ package hello.kpop.artist.controller;
 
 import hello.kpop.agency.repository.AgencyRepository;
 import hello.kpop.artist.Artist;
-import hello.kpop.artist.dto.ArtistAgencyDto;
+import hello.kpop.artist.dto.AgencyArtistListDto;
 import hello.kpop.artist.dto.ArtistDto;
 import hello.kpop.artist.dto.ArtistResponseDto;
 import hello.kpop.artist.dto.SuccessResponseDto;
@@ -13,15 +13,11 @@ import hello.kpop.place.common.DefaultRes;
 import hello.kpop.artist.errorHandler.ArtistResponseMessage;
 import hello.kpop.place.common.PageResponseDto;
 import hello.kpop.place.common.StatusCode;
-import hello.kpop.user.Role;
-import hello.kpop.user.User;
 import hello.kpop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -88,9 +84,9 @@ public class ArtistController {
 
     }
 
-    //아티스트ID, 아티스트명, 소속샤ID, 소속사명 전체 조회
+    //아티스트ID, 아티스트명, 소속사ID, 소속사명 전체 조회
     @GetMapping("/artist/agency")
-    public List<ArtistAgencyDto> selectArtistAgency() {
+    public List<AgencyArtistListDto> selectArtistAgency() {
         return artistService.selectArtistAgency();
     }
 
