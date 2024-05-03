@@ -27,6 +27,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 /**
  * 인증은 CustomJsonUsernamePasswordAuthenticationFilter에서 authenticate()로 인증된 사용자로 처리
@@ -46,9 +50,23 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final RedisTemplate<String, String> redisTemplate; // RedisTemplate 주입
 
+
+    //  CORS 설정
+    CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedHeaders(Collections.singletonList("*"));
+            config.setAllowedMethods(Collections.singletonList("*"));
+            config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000")); // ⭐️ 허용할 origin
+            config.setAllowCredentials(true);
+            return config;
+        };
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .formLogin(f->f.disable()) // FormLogin 사용 X
                 .httpBasic(h -> h.disable()) //HTTP 기본 인증을 비활성화
                 .csrf(AbstractHttpConfigurer::disable) //CSRF 보호 기능 비활성화
