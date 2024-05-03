@@ -23,7 +23,7 @@ public class Image {
     @Column(name = "image_url")
     private String imageUrl;
 
-    public Image(ImageDto requestDto) {
-        this.imageUrl = requestDto.getImageUrl();
+    public Image(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -120,7 +120,6 @@ public class AgencyService {
         Agency agency = agencyRepository.findById(agencyId).orElseThrow(
                 () -> new IllegalArgumentException("소속사 ID가 존재하지 않습니다."));
 
-//        agency.setDelYN("Y");
         agency.updateDelYN(DelStatus.DELETE);
 
         return new SuccessResponseDto(true);

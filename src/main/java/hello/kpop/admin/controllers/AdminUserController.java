@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller("adminUserController")
-@RequestMapping("/admin/user")
+@Controller
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminUserController {
 
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/user")
     public String selectUser(@ModelAttribute Authentication authentication, Model model) throws Exception {
 
         UserResponseDto dto =  userService.searchUser(authentication);
         model.addAttribute("user", dto);
-        return "/admin/user/index";
+        return "admin/user/index";
     }
 }

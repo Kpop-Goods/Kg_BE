@@ -2,6 +2,7 @@ package hello.kpop.artist.controller;
 
 import hello.kpop.agency.repository.AgencyRepository;
 import hello.kpop.artist.Artist;
+import hello.kpop.artist.dto.AgencyArtistListDto;
 import hello.kpop.artist.dto.ArtistDto;
 import hello.kpop.artist.dto.ArtistResponseDto;
 import hello.kpop.artist.dto.SuccessResponseDto;
@@ -12,15 +13,11 @@ import hello.kpop.place.common.DefaultRes;
 import hello.kpop.artist.errorHandler.ArtistResponseMessage;
 import hello.kpop.place.common.PageResponseDto;
 import hello.kpop.place.common.StatusCode;
-import hello.kpop.user.Role;
-import hello.kpop.user.User;
 import hello.kpop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,12 +34,12 @@ public class ArtistController {
 
     //아티스트 등록
     @PostMapping("/artist/{agencyId}")
-    public ResponseEntity<ArtistResponseDto> saveArtist(@RequestBody ArtistDto requestDto, @PathVariable Long agencyId, Authentication authentication) throws Exception {
+    public ResponseEntity<ArtistResponseDto> saveArtist(@RequestBody ArtistDto requestDto, @PathVariable Long agencyId/*, Authentication authentication*/) throws Exception {
 
         //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
-        if(authentication == null) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_REGISTER), HttpStatus.UNAUTHORIZED);
-        }
+//        if(authentication == null) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_REGISTER), HttpStatus.UNAUTHORIZED);
+//        }
 
         //소속사 ID가 일치하는 게 없을 시 실행
         if(!(agencyRepository.findById(agencyId).isPresent())) {
@@ -74,27 +71,29 @@ public class ArtistController {
             return new ResponseEntity(DefaultRes.res(StatusCode.CONFLICT, ArtistResponseMessage.OVERLAP_ARTIST_NAME), HttpStatus.CONFLICT);
         }
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
 
-        if (user.getUserType() == Role.ADMIN) {
-            requestDto.updateRegId(user.getNickname());
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.ARTIST_REGISTER_SUCCESS, artistService.saveArtist(requestDto, agencyId)), HttpStatus.OK);
-        } else {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_REGISTER), HttpStatus.UNAUTHORIZED);
-        }
+//        if (user.getUserType() == Role.ADMIN) {
+//            requestDto.updateRegId(user.getNickname());
+//            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.ARTIST_REGISTER_SUCCESS, artistService.saveArtist(requestDto, agencyId)), HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_REGISTER), HttpStatus.UNAUTHORIZED);
+//        }
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.ARTIST_REGISTER_SUCCESS, artistService.saveArtist(requestDto, agencyId)), HttpStatus.OK);
+
     }
 
-    //아티스트 전체 조회
-//    @GetMapping("/artist/list")
-//    public List<ArtistResponseDto> selectArtistList() {
-//        return artistService.selectArtistList();
-//    }
+    //아티스트ID, 아티스트명, 소속사ID, 소속사명 전체 조회
+    @GetMapping("/artist/agency")
+    public List<AgencyArtistListDto> selectArtistAgency() {
+        return artistService.selectArtistAgency();
+    }
 
     //페이징 + 아티스트 전체 조회
     @GetMapping("/artist/list")
     public ResponseEntity<ArtistResponseDto> pageArtist(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
-                                                        @RequestParam(required = false, defaultValue = "16", value = "size") int size) {
+                                                        @RequestParam(required = false, defaultValue = "16", value = "size") int size) throws Exception{
         //page, size가 음수일 경우
         if(page < 0 || size <= 0) {
             return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, ArtistResponseMessage.NON_NEGATIVE_VALUES), HttpStatus.BAD_REQUEST);
@@ -129,12 +128,12 @@ public class ArtistController {
 
     //선택한 아티스트 정보 수정
     @PutMapping("/artist/{artistId}")
-    public ResponseEntity<ArtistResponseDto> updateArtist(@PathVariable Long artistId, @RequestBody ArtistDto requestDto, Authentication authentication) throws Exception {
+    public ResponseEntity<ArtistResponseDto> updateArtist(@PathVariable Long artistId, @RequestBody ArtistDto requestDto/*, Authentication authentication*/) throws Exception {
 
         //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
-        if(authentication == null) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_UPDATE), HttpStatus.UNAUTHORIZED);
-        }
+//        if(authentication == null) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_UPDATE), HttpStatus.UNAUTHORIZED);
+//        }
 
         Optional<Artist> artistOptional = artistRepository.findById(artistId);
 
@@ -151,25 +150,26 @@ public class ArtistController {
             return new ResponseEntity(DefaultRes.res(StatusCode.NOT_FOUND, ArtistResponseMessage.DELETED_ARTIST), HttpStatus.NOT_FOUND);
         }
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
-
-        //관리자만 수정 가능
-        if(artist.getRegId().equals(user.getNickname())) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.UPDATE_ARTIST_SUCCESS, artistService.updateArtist(artistId, requestDto)), HttpStatus.OK);
-        } else {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_UPDATE), HttpStatus.UNAUTHORIZED);
-        }
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+//
+//        //관리자만 수정 가능
+//        if(artist.getRegId().equals(user.getNickname())) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.UPDATE_ARTIST_SUCCESS, artistService.updateArtist(artistId, requestDto)), HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_UPDATE), HttpStatus.UNAUTHORIZED);
+//        }
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.UPDATE_ARTIST_SUCCESS, artistService.updateArtist(artistId, requestDto)), HttpStatus.OK);
     }
 
     //선택한 아티스트 삭제
     @DeleteMapping("/artist/{artistId}")
-    public ResponseEntity<SuccessResponseDto> deleteArtist(@PathVariable Long artistId, Authentication authentication) throws Exception {
+    public ResponseEntity<SuccessResponseDto> deleteArtist(@PathVariable Long artistId/*, Authentication authentication*/) throws Exception {
 
         //토큰이 없는 경우 실행, 즉 로그아웃인 상태에 실행
-        if(authentication == null) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_DELETE), HttpStatus.UNAUTHORIZED);
-        }
+//        if(authentication == null) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_DELETE), HttpStatus.UNAUTHORIZED);
+//        }
 
         Optional<Artist> artistOptional = artistRepository.findById(artistId);
         Artist artist = artistOptional.get();
@@ -179,15 +179,15 @@ public class ArtistController {
             return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, ArtistResponseMessage.DELETE_ARTIST_FAIL), HttpStatus.BAD_REQUEST);
         }
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
-
-        if(artist.getRegId().equals(user.getNickname())) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.DELETE_ARTIST_SUCCESS, artistService.deleteArtist(artistId)), HttpStatus.OK);
-        } else {
-            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_DELETE), HttpStatus.UNAUTHORIZED);
-        }
-
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        User user = userRepository.findByUserEmail(userDetails.getUsername()).orElse(null);
+//
+//        if(artist.getRegId().equals(user.getNickname())) {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.DELETE_ARTIST_SUCCESS, artistService.deleteArtist(artistId)), HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity(DefaultRes.res(StatusCode.UNAUTHORIZED, ArtistResponseMessage.UNAUTHORIZED_ARTIST_DELETE), HttpStatus.UNAUTHORIZED);
+//        }
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ArtistResponseMessage.DELETE_ARTIST_SUCCESS, artistService.deleteArtist(artistId)), HttpStatus.OK);
     }
 
     //아티스트 명 검색했을 시 조회

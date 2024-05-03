@@ -5,6 +5,8 @@ import hello.kpop.agency.repository.AgencyRepository;
 import hello.kpop.agency.status.DelStatus;
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.ArtistSpecification;
+import hello.kpop.artist.dto.AgencyArtistListDto;
+
 import hello.kpop.artist.dto.ArtistDto;
 import hello.kpop.artist.dto.ArtistResponseDto;
 import hello.kpop.artist.dto.SuccessResponseDto;
@@ -41,7 +43,6 @@ public class ArtistService {
         Artist artist = new Artist(requestDto, agency);
 
         //등록 시 삭제여부는 N으로 설정
-//        artist.setDelYN("N");
         artist.updateDelYN(DelStatus.DEFAULT);
 
         artistRepository.save(artist);
@@ -49,6 +50,12 @@ public class ArtistService {
         return new ArtistResponseDto(artist);
     }
 
+    //아티스트ID, 아티스트명, 소속사ID, 소속사명 전체 조회
+    @Transactional
+    public List<AgencyArtistListDto> selectArtistAgency() {
+        return artistRepository.findAll().stream().map(AgencyArtistListDto::new).toList();
+    }
+  
     //페이징 + 아티스트 전체 조회
     @Transactional(readOnly = true)
     public Page<Artist> pageArtistList(int page, int size) {
@@ -122,7 +129,6 @@ public class ArtistService {
         Artist artist = artistRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아티스트 ID가 존재하지 않습니다."));
 
-//        artist.setDelYN("Y");
         artist.updateDelYN(DelStatus.DELETE);
 
         return new SuccessResponseDto(true);
