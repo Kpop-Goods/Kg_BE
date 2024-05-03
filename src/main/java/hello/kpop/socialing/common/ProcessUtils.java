@@ -1,6 +1,7 @@
 package hello.kpop.socialing.common;
 
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -45,6 +46,15 @@ public class ProcessUtils {
         }
     }
 
+    //세션 초기화(로그인 초기화)
+    public static void loginInit(HttpSession session){
+        session.removeAttribute("email");
+        session.removeAttribute("NotBlank_email");
+        session.removeAttribute("NotBlank_password");
+        session.removeAttribute("globalError");
+    }
+
+    // 음수값 처리
     public static int onlyPositiveNumber(int num, int replace) {
         return num < 1 ? replace : num;
     }

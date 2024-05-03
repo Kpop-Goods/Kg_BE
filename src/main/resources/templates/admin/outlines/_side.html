@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<aside th:fragment="menu">
+    <ul>
+        <li>
+            <a th:href="@{/admin/config}" th:classappend="${menuCode} == 'config' ? 'on'">
+                <i class="xi-cog"></i>
+                사이트 설정
+            </a>
+
+        </li>
+        <li>
+            <a th:href="@{/templates/admin/user}" th:classappend="${menuCode} == 'member' ? 'on'">
+                <i class="xi-users-o"></i>
+                관리 1
+            </a>
+        </li>
+
+        <li>
+            <a th:href="@{/admin/board}" th:classappend="${menuCode} == 'board' ? 'on'">
+                <i class="xi-pen-o"></i>
+                관리 1
+            </a>
+        </li>
+    </ul>
+</aside>
+</html>
