@@ -27,6 +27,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -83,17 +84,16 @@ public class SecurityConfig {
                         // 아이콘, css, js 관련
                         // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
                         .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/email/**").authenticated()
-                        .requestMatchers("/social/**").permitAll()
-                        .requestMatchers("/email/**").permitAll()
-                        .requestMatchers("/user/**").authenticated()
-                        .requestMatchers("/email/**").authenticated()
-                        .requestMatchers("/agency/**").permitAll()
-                        .requestMatchers("/artist/**").permitAll()
-                        .requestMatchers("/place/**").permitAll()
-                        .requestMatchers("/board/**").permitAll()
-                        .requestMatchers("/file/**").permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/social/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/email/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/user/**")).authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/email/**")).authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/agency/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/artist/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/place/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/board/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/file/**")).permitAll()
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
 
                 //== 소셜 로그인 설정 ==//
