@@ -1,6 +1,7 @@
 package hello.kpop.follow;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,16 +10,18 @@ import java.util.List;
 
 @Service
 public class FollowService {
+	@Qualifier("follow.UserRepository")
 	@Autowired
-	private UserRepository2 userRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private IdolRepository idolRepository;
 	@Autowired
 	private ItemRepository itemRepository;
 	@Autowired
 	private MeetRepository meetRepository;
+	@Qualifier("follow.PlaceRepository")
 	@Autowired
-	private PlaceRepository2 placeRepository;
+	private PlaceRepository placeRepository;
 
 	//// user
 	public boolean addUser(Long userId, String name, String email) {
