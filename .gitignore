@@ -1,5 +1,10 @@
 application-dev.*
 
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
+
 HELP.md
 .gradle
 build/
