@@ -95,7 +95,9 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/place/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/board/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/file/**")).permitAll()
-                        .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
+						.requestMatchers("/v1/calendar/**", "/v1/follow/**").permitAll() // for api testing
+						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger
+						.anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
 
                 //== 소셜 로그인 설정 ==//
                 .oauth2Login((oauth2) -> oauth2 // OAuth2 로그인 설정시작

@@ -8,8 +8,8 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface UserRepository2 extends Neo4jRepository<User, Long> {
+@Repository("follow.UserRepository")
+public interface UserRepository extends Neo4jRepository<User, Long> {
 
 	User findByName(String name);
 
