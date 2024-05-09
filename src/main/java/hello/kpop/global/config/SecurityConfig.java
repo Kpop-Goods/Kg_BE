@@ -59,7 +59,7 @@ public class SecurityConfig {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOrigins(List.of("http://localhost:8082","https://k-pop-good.shop")); // ⭐️ 허용할 origin
+            config.setAllowedOrigins(List.of("http://localhost:8082","http://localhost:3000","https://k-pop-good.shop")); // ⭐️ 허용할 origin
             config.setAllowCredentials(true);
             return config;
         };
