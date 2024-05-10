@@ -27,6 +27,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 인증은 CustomJsonUsernamePasswordAuthenticationFilter에서 authenticate()로 인증된 사용자로 처리
@@ -46,9 +52,23 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final RedisTemplate<String, String> redisTemplate; // RedisTemplate 주입
 
+
+    //  CORS 설정
+    CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedHeaders(Collections.singletonList("*"));
+            config.setAllowedMethods(Collections.singletonList("*"));
+            config.setAllowedOrigins(List.of("http://localhost:8082","http://localhost:3000","https://k-pop-good.shop")); // ⭐️ 허용할 origin
+            config.setAllowCredentials(true);
+            return config;
+        };
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .formLogin(f->f.disable()) // FormLogin 사용 X
                 .httpBasic(h -> h.disable()) //HTTP 기본 인증을 비활성화
                 .csrf(AbstractHttpConfigurer::disable) //CSRF 보호 기능 비활성화
@@ -65,20 +85,20 @@ public class SecurityConfig {
                         // 아이콘, css, js 관련
                         // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
                         .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/email/**").authenticated()
-                        .requestMatchers("/social/**").permitAll()
-                        .requestMatchers("/email/**").permitAll()
-                        .requestMatchers("/user/**").authenticated()
-                        .requestMatchers("/email/**").authenticated()
-                        .requestMatchers("/agency/**").permitAll()
-                        .requestMatchers("/artist/**").permitAll()
-                        .requestMatchers("/place/**").permitAll()
-                        .requestMatchers("/board/**").permitAll()
-                        .requestMatchers("/image/**").permitAll()
-                        .requestMatchers("/admin/**").permitAll()
-                        .requestMatchers("/file/**").permitAll()
-                        .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
+                        .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/social/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/email/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/user/**")).authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/email/**")).authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/agency/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/artist/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/place/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/board/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/file/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).permitAll()
+						.requestMatchers("/v1/calendar/**", "/v1/follow/**").permitAll() // for api testing
+						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger
+						.anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
 
                 //== 소셜 로그인 설정 ==//
                 .oauth2Login((oauth2) -> oauth2 // OAuth2 로그인 설정시작

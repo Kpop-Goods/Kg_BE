@@ -5,8 +5,8 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface PlaceRepository2 extends Neo4jRepository<Place, Long> {
+@Repository("follow.PlaceRepository")
+public interface PlaceRepository extends Neo4jRepository<Place, Long> {
 	Place findByPlaceId(Long placeId);
 	Place findOneByPlaceId(Long placeId);
 
