@@ -10,11 +10,11 @@ server:
 spring:
   # 프로필 설정
   profiles:
-    active: prod
+    active: local
     include: oauth, jwt, data, mail, s3
 ---
 spring:
   # 프로필 설정
   profiles:
-    active: local
+    active: prod
     include: oauth, jwt, data, mail, s3
