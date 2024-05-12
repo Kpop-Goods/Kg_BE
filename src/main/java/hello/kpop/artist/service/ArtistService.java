@@ -11,6 +11,7 @@ import hello.kpop.artist.dto.ArtistDto;
 import hello.kpop.artist.dto.ArtistResponseDto;
 import hello.kpop.artist.dto.SuccessResponseDto;
 import hello.kpop.artist.repository.ArtistRepository;
+import hello.kpop.follow.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,6 +28,7 @@ public class ArtistService {
 
     private final ArtistRepository artistRepository;
     private final AgencyRepository agencyRepository;
+	private final FollowService followService; // follow service by neo4j
 
     //아티스트 등록
     @Transactional
@@ -47,6 +49,9 @@ public class ArtistService {
 
         artistRepository.save(artist);
 
+		boolean unit = artist.getUnitYN().equalsIgnoreCase("Y") ? true : false;
+		boolean gender = artist.getGender().equalsIgnoreCase("F") ? true : false;
+		followService.addArtist(artist.getArtistId(), artist.getArtistName(), unit, gender); // add an idol/artist node
         return new ArtistResponseDto(artist);
     }
 
@@ -120,6 +125,10 @@ public class ArtistService {
         }
 
         artist.update(requestDto);
+
+		boolean unit = artist.getUnitYN().equalsIgnoreCase("Y") ? true : false;
+		boolean gender = artist.getGender().equalsIgnoreCase("F") ? true : false;
+		followService.modifyArtist(artist.getArtistId(), artist.getArtistName(), unit, gender); // modify an idol/artist node
         return new ArtistResponseDto(artist);
     }
 
@@ -131,6 +140,7 @@ public class ArtistService {
 
         artist.updateDelYN(DelStatus.DELETE);
 
+		followService.deleteArtist(artist.getArtistId()); // delete an idol/artist node
         return new SuccessResponseDto(true);
     }
 
