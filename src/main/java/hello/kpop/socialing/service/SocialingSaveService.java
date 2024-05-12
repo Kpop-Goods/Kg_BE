@@ -3,6 +3,7 @@ package hello.kpop.socialing.service;
 
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.repository.ArtistRepository;
+import hello.kpop.follow.FollowService;
 import hello.kpop.socialing.common.ProcessUtils;
 import hello.kpop.socialing.common.UserAuthentication;
 import hello.kpop.socialing.common.exception.BadRequestException;
@@ -29,7 +30,7 @@ public class SocialingSaveService {
     private final ArtistRepository artistRepository;
     private final SocialingValidator socialingValidator;
     private final UserAuthentication userAuthentication;
-
+	private final FollowService followService; // follow service by neo4j
 
     // 소셜 등록
     public void createSocial(SocialingData data, Errors errors, Authentication authentication) {
@@ -58,7 +59,10 @@ public class SocialingSaveService {
 
         Artist artist = getArtist(data.getArtistName());
         socialing.modify(data,artist);
-    }
+
+		followService.modifyMeet(socialing.getSocialingId(),
+			socialing.getSocialing_name(), artist.getArtistId(), socialing.getUser().getId()); // modify a meet node
+	}
 
     //등록 메서드
     public void save(SocialingData data, Authentication authentication) {
@@ -86,7 +90,10 @@ public class SocialingSaveService {
         socialingRepository.saveAndFlush(socialing);
         //응답시 유저 닉네임 보여주기
         data.setNickname(user.getNickname());
-    }
+
+		followService.addMeet(socialing.getSocialingId(),
+			socialing.getSocialing_name(), artist.getArtistId(), user.getId()); // add a meet node
+	}
 
     //등록할 아티스트 확인
     public Artist getArtist(String artistName){
