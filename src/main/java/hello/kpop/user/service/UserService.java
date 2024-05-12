@@ -1,5 +1,6 @@
 package hello.kpop.user.service;
 
+import hello.kpop.follow.FollowService;
 import hello.kpop.user.Role;
 import hello.kpop.user.User;
 import hello.kpop.user.dto.UserRequestDto;
@@ -24,6 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RedisTemplate<String, String> redisTemplate;
+    private final FollowService followService; // follow service by neo4j
 
     @Transactional
     public UserResponseDto signUp(UserRequestDto userRequestDto) throws Exception {
@@ -51,6 +53,7 @@ public class UserService {
         assertThat(resultUser.getLockCnt(), Is.is(0));
         assertThat(resultUser.getLockYn(), Is.is('N'));
 
+        followService.addUser(user.getId(), user.getUserName(), user.getUserEmail()); // add a user node
         return new UserResponseDto(user);
     }
 
@@ -66,6 +69,7 @@ public class UserService {
         // }
 
         user.update(userRequestDto,passwordEncoder);
+		followService.modifyUser(user.getId(), user.getUserName()); // modify a user node
         return new UserResponseDto(user);
     }
 
@@ -91,6 +95,7 @@ public class UserService {
         user.updateUserStatCode("delete");
         userRepository.save(user); // 상태를 업데이트한 후에 저장하여 트랜잭션을 커밋하도록 함
 
+		followService.deleteUser(user.getId()); // delete a user node
         return new UserSuccessResponseDto(true);
     }
 

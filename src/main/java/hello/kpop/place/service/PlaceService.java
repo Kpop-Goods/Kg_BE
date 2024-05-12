@@ -4,6 +4,7 @@ import hello.kpop.agency.status.DelStatus;
 import hello.kpop.artist.Artist;
 import hello.kpop.artist.dto.SuccessResponseDto;
 import hello.kpop.artist.repository.ArtistRepository;
+import hello.kpop.follow.FollowService;
 import hello.kpop.place.Place;
 import hello.kpop.place.PlaceSpecification;
 import hello.kpop.place.common.DefaultRes;
@@ -32,6 +33,7 @@ public class PlaceService {
 
     private final PlaceRepository placeRepository;
     private final ArtistRepository artistRepository;
+	private final FollowService followService; // follow service by neo4j
 
 //    @Transactional
 //    //이벤트/장소 등록
@@ -79,6 +81,8 @@ public class PlaceService {
         place.updateDelYN(DelStatus.DEFAULT);
 
         placeRepository.save(place);
+		followService.addPlace(place.getEventId(),
+			place.getEventName(), place.getAddress(), place.getArtist().getArtistId()); // add a place node
 
         return new PlaceResponseDto(place);
     }
@@ -151,7 +155,9 @@ public class PlaceService {
         }
 
         place.update(requestDto);
-        return new PlaceResponseDto(place);
+		followService.modifyPlace(place.getEventId(),
+				place.getEventName(), place.getAddress(), place.getArtist().getArtistId()); // modify a place node
+		return new PlaceResponseDto(place);
     }
 
     //선택한 이벤트/장소 삭제
@@ -162,7 +168,7 @@ public class PlaceService {
 
 //        place.setDelYN("Y");
         place.updateDelYN(DelStatus.DELETE);
-
+		followService.deletePlace(place.getEventId()); // delete a place node
         return new SuccessResponseDto(true);
     }
 
