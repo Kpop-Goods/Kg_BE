@@ -30,6 +30,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,16 +56,18 @@ public class SecurityConfig {
 
 
     //  CORS 설정
-    CorsConfigurationSource corsConfigurationSource() {
-        return request -> {
-            CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedHeaders(Collections.singletonList("*"));
-            //config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-            config.setAllowedOrigins(List.of("http://localhost:8082","http://localhost:3000","https://k-pop-good.shop")); // ⭐️ 허용할 origin
-            config.setAllowCredentials(true);
-            return config;
-        };
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedOrigins(List.of("http://localhost:8082", "http://localhost:3000", "https://k-pop-good.shop"));
+        config.setAllowCredentials(true);
+        config.setExposedHeaders(Arrays.asList("Access-Token", "Uid")); // exposedHeaders 추가
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Bean
