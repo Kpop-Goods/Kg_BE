@@ -83,6 +83,9 @@ public class User {
     @Column(name = "follow_cnt")
     private Integer followCnt; // 팔로워 수
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @PrePersist
     public void prePersist() {
         this.followCnt = this.followCnt == null ? 0 : this.followCnt;
@@ -135,6 +138,10 @@ public class User {
     public void updateLock(Character lockYn, Integer lockCnt) {
         this.lockYn = lockYn;
         this.lockCnt = lockCnt;
+    }
+
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     @Transactional

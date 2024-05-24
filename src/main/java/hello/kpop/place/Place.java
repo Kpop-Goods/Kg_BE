@@ -3,7 +3,9 @@ package hello.kpop.place;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.kpop.artist.Artist;
+import hello.kpop.image.StringListConverter;
 import hello.kpop.place.dto.PlaceDto;
+import hello.kpop.socialing.common.entitiy.Base;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -11,6 +13,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,7 +21,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Table(name = "event")
 @Builder
-public class Place extends BaseTimeEntity {
+public class Place extends Base {
 
     //이벤트 ID
     @Id
@@ -110,6 +113,20 @@ public class Place extends BaseTimeEntity {
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "artist_fk")
     private Artist artist; //fk(=Artist_pk)
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "image_urls")
+    private List<String> imageUrls;
+
+    // 이미지 URL 리스트를 추가하는 메서드
+    public void addImageUrl(String imageUrl) {
+        this.imageUrls.add(imageUrl);
+    }
+
+    // 이미지 URL 리스트를 설정하는 메서드
+    public void updateImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
 
     //Image 조인
 //    @OneToMany

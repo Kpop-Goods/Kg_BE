@@ -39,7 +39,7 @@ public class AgencyResponseDto {
         this.delYN = entity.getDelYN();
         this.regId = entity.getRegId();
         this.regDt = entity.getRegDt();
-        this.modDt = entity.getModDt();
+        this.modDt = entity.getMod_dt();
         this.artists = entity.getArtists().stream().toList();
     }
 }

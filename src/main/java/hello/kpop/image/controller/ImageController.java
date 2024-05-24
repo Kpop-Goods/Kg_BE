@@ -29,10 +29,12 @@ public class ImageController {
      * 한번에 여러 개의 이미지 파일 업로드
      * */
     @PostMapping("/file/uploadFile")
-    public ResponseEntity<ImageResponseDto> registerImag(@RequestPart("imgUrl") List<MultipartFile> multipartFiles) {
+    public ResponseEntity<DefaultRes<List<String>>> registerImage(@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
+                                                                  @RequestParam("entityType") Integer entityType,
+                                                                  @RequestParam("entityId") Long entityId) {
         List<String> imgPaths = s3Uploader.uploadFile(multipartFiles);
-        imageService.registerImage(imgPaths);
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ImageResponseMessage.IMAGE_REGISTER_SUCCESS, s3Uploader.uploadFile(multipartFiles)), HttpStatus.OK);
+        imageService.registerImage(entityType, entityId, imgPaths);
+        return new ResponseEntity<>(DefaultRes.res(StatusCode.OK, ImageResponseMessage.IMAGE_REGISTER_SUCCESS, imgPaths), HttpStatus.OK);
     }
 
     /*
