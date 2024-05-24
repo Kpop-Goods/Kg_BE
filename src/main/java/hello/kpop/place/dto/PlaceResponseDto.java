@@ -59,7 +59,7 @@ public class PlaceResponseDto {
         this.delYN = entity.getDelYN();
         this.regId = entity.getRegId();
         this.regDt = entity.getRegDt();
-        this.modDt = entity.getModDt();
+        this.modDt = entity.getMod_dt();
         this.artistId = entity.getArtist().getArtistId();
         this.agencyId = entity.getArtist().getAgency().getAgencyId();
     }
