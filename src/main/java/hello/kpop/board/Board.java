@@ -1,6 +1,7 @@
 package hello.kpop.board;
 
 import hello.kpop.board.dto.BoardData;
+import hello.kpop.image.StringListConverter;
 import hello.kpop.socialing.common.entitiy.BaseMember;
 import hello.kpop.user.User;
 import jakarta.persistence.*;
@@ -8,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -40,6 +43,20 @@ public class Board extends BaseMember {
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="user_fk")
     private User user; //유저 아이디
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "image_urls")
+    private List<String> imageUrls;
+
+    // 이미지 URL 리스트를 추가하는 메서드
+    public void addImageUrl(String imageUrl) {
+        this.imageUrls.add(imageUrl);
+    }
+
+    // 이미지 URL 리스트를 설정하는 메서드
+    public void updateImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
 
 
     // 수정시 사용할 매서드

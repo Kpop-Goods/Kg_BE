@@ -1,10 +1,14 @@
 package hello.kpop.goods.dto;
 
 
+import hello.kpop.image.StringListConverter;
 import hello.kpop.socialing.common.entitiy.Base;
 import lombok.*;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -52,5 +56,20 @@ public class Goods extends Base {
     //등록ID
     @Column(name = "reg_id")
     private String regId;
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "image_urls")
+    private List<String> imageUrls;
+
+    // 이미지 URL 리스트를 추가하는 메서드
+    public void addImageUrl(String imageUrl) {
+        this.imageUrls.add(imageUrl);
+    }
+
+    // 이미지 URL 리스트를 설정하는 메서드
+    public void updateImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
+
 
 }

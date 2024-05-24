@@ -19,11 +19,24 @@ public class Image {
     @Column(name = "image_id")
     private Long ImageId;
 
-    //이미지 url
+    // 이미지 url
     @Column(name = "image_url")
     private String imageUrl;
 
-    public Image(String imageUrl) {
+    // 엔티티 분류 코드
+    @Column(name = "entity_type")
+    private Integer entityType;
+
+    // 엔티티 ID
+    @Column(name = "entity_id")
+    private Long entityId;
+
+
+    public Image(String imageUrl, Integer entityType, Long entityId) {
         this.imageUrl = imageUrl;
+        this.entityType = entityType;
+        this.entityId = entityId;
     }
+
+
 }
