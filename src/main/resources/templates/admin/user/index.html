@@ -3,13 +3,39 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layouts/main}">
 <section layout:fragment="content">
-    <h1>회원 관리</h1>
-<!--    <form th:method="post" th:action="@{/admin/user}" target="imfrmProcecss" autocomplete="off">-->
+    <h1>회원 목록</h1>
+    <form th:method="get" th:action="@{/admin/user}" target="ifrmProcess" autocomplete="off">
+        <div>
+            <input type="hidden" name="mode" value="edit">
+            <table class="table-list">
+                <thead class="thead-list">
+                <tr>
+                     <th><input type="checkbox" class="checkall" id="checkall" data-target-name="chkNo"> </th>
+                    <th th:text="#{이메일}"></th>
+                    <th th:text="#{회원명}"></th>
+                    <th th:text="#{유저_닉네임}"></th>
+                    <th th:text="#{역할}"></th>
+                    <th th:text="#{소셜_타입}"></th>
+                </tr>
+                </thead>
+                <tbody class="tbody-list">
+                <tr th:each="userresponsedto : ${users}" th:object="${userresponsedto}">
+                       <td>
+                           <input type="checkbox" class="checkall" data-target-name="chkNo">
+                       </td>
+                    <td th:text="*{userEmail}"></td>
+                    <td th:text="*{userName}"></td>
+                    <td th:text="*{nickname}"></td>
+                    <td th:text="*{userType}"></td>
+                    <td th:text="*{socialType}"></td>
+                </tr>
+                </tbody>
+            </table>
 
+        </div>
 
-<!--    </form>-->
-
-
+    </form>
+    <th:block th:if="${users != null && !users.isEmpty()}" th:replace="~{common/_pagination::pagination}"></th:block>
 </section>
 
 </html>

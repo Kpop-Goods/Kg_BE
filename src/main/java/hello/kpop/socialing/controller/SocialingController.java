@@ -30,7 +30,7 @@ public class SocialingController  {
     //소셜 전체 조회
     @GetMapping("/list")
     public ListData<SocialingListData> findSocialList(SocialingSearchData searchDto) {
-        ListData<SocialingListData> list = infoService.getList(searchDto);
+        ListData<SocialingListData> list = infoService.filterList(searchDto);
         return new ListData<>(list.getContent(), list.getPagination());
     }
 

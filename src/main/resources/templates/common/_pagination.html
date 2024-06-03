@@ -5,15 +5,15 @@
     <div class="pagination">
 
         <!--        구간에 따라서 보여지거나 안보여지지 않음-->
-        <a th:if="*{prevFirstPage > 0}" th:href="*{#strings.concat(baseUrl,  '1')}">&lt;&lt;</a>
-        <a th:if="*{prevFirstPage > 0}" th:href="*{#strings.concat(baseUrl, prevFirstPage)}">&lt;</a>
+        <a th:if="*{prevRangePage > 0}" th:href="*{#strings.concat(baseUrl,  '1')}">&lt;&lt;</a>
+        <a th:if="*{prevRangePage > 0}" th:href="*{#strings.concat(baseUrl, prevRangePage)}">&lt;</a>
 
 
         <a th:each="p : *{pages}" th:href="${p[1]}" th:text="${p[0]}" th:classappend="${p[0] == '' + pagination.page} ? 'on'"></a>
 
         <!--        구간에 따라서 보여지거나 안보여지지 않음-->
-        <a th:if="*{nextFirstPage > 0}" th:href="*{#strings.concat(baseUrl, nextFirstPage)}">&gt;</a>
-        <a th:if="*{nextFirstPage > 0}" th:href="*{#strings.concat(baseUrl, totalPages)}">&gt;&gt;</a>
+        <a th:if="*{nextRangePage > 0}" th:href="*{#strings.concat(baseUrl, nextRangePage)}">&gt;</a>
+        <a th:if="*{nextRangePage > 0}" th:href="*{#strings.concat(baseUrl, totalPages)}">&gt;&gt;</a>
     </div>
 </th:block>
 </html>

@@ -22,6 +22,7 @@ public class BoardSaveService {
 
     private final BoardRepository boardRepository;
     private final UserAuthentication userAuthentication;
+    private final ProcessUtils utils;
 
 
     //공지사항 등록
@@ -69,6 +70,15 @@ public class BoardSaveService {
         data.setCreatedBy(board.getCreatedBy());
         data.setRegDt(board.getRegDt());
     }
+
+//    public void update(List<Integer> idxes){
+//        if(idxes == null || idxes.isEmpty()){
+//            throw new AlertException("수정할 게시판을 선택하세요");
+//        }
+//        for(int idx : idxes){
+//            String bId = utils.getParam("sub_"+idx);
+//            Board board = boardRepository.findByBId(bId);
+//            if(board == null) continue;
 
 
 

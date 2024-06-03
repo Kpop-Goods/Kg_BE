@@ -3,6 +3,35 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layouts/main}">
 <section layout:fragment="content">
-    <h1>공지 사항 목록</h1>
+    <h1>게시판 목록</h1>
+
+            <table class="table-list">
+                <thead class="thead-list">
+                <tr>
+                    <th th:text="#{게시글_제목}"></th>
+                    <th th:text="#{닉네임}"></th>
+                    <th th:text="#{노출여부}"></th>
+                    <th th:text="#{삭제여부}"></th>
+                    <th th:text="#{등록일자}"></th>
+                </tr>
+                </thead>
+                <tbody class="tbody-list">
+                <th:block th:if="${boards != null && boards.size()>0}">
+                <tr th:each="boardlistdata : ${boards}" th:object="${boardlistdata}">
+                    <td th:text="*{subject}"></td>
+                    <td th:text="*{nickName}"></td>
+                    <td th:text="*{notice_yn} ? 'O' : 'X'"></td>
+                    <td th:text="*{del_yn} ? 'O' : 'X'"></td>
+                    <td th:text="*{#temporals.format(regDt, 'yyyy년MM월dd일 HH:mm')}"></td>
+                </tr>
+                </th:block>
+                <th:block th:unless="${boards != null  && boards.size() >0}">
+                    <tr>
+                        <td colspan="7" class="no_data">조회된 목록이 없습니다.</td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+    <th:block th:if="${boards != null && !boards.isEmpty()}" th:replace="~{common/_pagination::pagination}"></th:block>
 </section>
 </html>

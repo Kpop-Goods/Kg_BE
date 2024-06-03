@@ -1,6 +1,7 @@
 package hello.kpop.socialing.common;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,11 +21,16 @@ public class ProcessUtils {
 
     private static final ResourceBundle validationsBundle;
     private static final ResourceBundle errorsBundle;
+    private static final ResourceBundle commonsBundle;
+
+    private final HttpServletRequest request;
 
     static {
         //메세지 코드를 불러옴 (resources)
         validationsBundle = ResourceBundle.getBundle("messages.validations");
         errorsBundle = ResourceBundle.getBundle("messages.errors");
+        commonsBundle = ResourceBundle.getBundle("messages.commons");
+
     }
     //bundle 타입에 따라서 나오는 값이 바뀌게
     public static String getMessage(String code, String bundleType) {
@@ -35,6 +41,8 @@ public class ProcessUtils {
 
             if (bundleType.equals("errors")) {
                 bundle = errorsBundle;
+            } else if (bundleType.equals("common")) {
+                bundle=commonsBundle;
             } else {
                 bundle = validationsBundle;
             }
@@ -62,6 +70,12 @@ public class ProcessUtils {
     public static String getMessage(String code) {
         return getMessage(code, null);
     }
+
+    public String getParam(String name) {
+        return request.getParameter(name);
+    }
+
+
 
 }
 

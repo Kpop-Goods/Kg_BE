@@ -7,13 +7,14 @@
 <!--    <meta name="_csrf_header" th:content="${_csrf.headerName}">-->
 <!--    <meta name="description" th:content="${@siteConf.get('siteDescription')}">-->
     <title>
-        관리자 페이지
+        <th:block th:if="${pageTitle != null}" th:text="${pageTitle + ' ::'}"></th:block>
+        <th:block th:text="${@siteConf.get('siteTitle')}"></th:block>
     </title>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
 
-    <link rel="stylesheet" type="text/css" th:href="@{/templates/commons/css/style.css?v={v}(v=${@siteConf.get('cssJsVersion')})}">
+    <link rel="stylesheet" type="text/css" th:href="@{/common/css/style.css?v={v}(v=${@siteConf.get('cssJsVersion')})}">
     <link rel="stylesheet" type="text/css" th:each="file : ${addCommonCss}"
-          th:href="@{/templates/commons/css/{file}.css?v={v}(file=${file},v=${@siteConf.get('cssJsVersion')})}">
+          th:href="@{/common/css/{file}.css?v={v}(file=${file},v=${@siteConf.get('cssJsVersion')})}">
 
     <link rel="stylesheet" type="text/css" th:href="@{/admin/css/style.css?v={v}(v=${@siteConf.get('cssJsVersion')})}">
     <link rel="stylesheet" type="text/css" th:each="file : ${addCss}"
@@ -21,8 +22,8 @@
 
     <th:block layout:fragment="addCss"></th:block>
 
-    <script th:src="@{/templates/commons/js/common.js}"></script>
-    <script th:each="file : ${addCommonScript}" th:src="@{/templates/commons/js/{file}.js?v={v}(file=${file}, v=${@siteConf.get('cssJsVersion')})}"></script>
+    <script th:src="@{/common/js/common.js}"></script>
+    <script th:each="file : ${addCommonScript}" th:src="@{/common/js/{file}.js?v={v}(file=${file}, v=${@siteConf.get('cssJsVersion')})}"></script>
 
     <script th:src="@{/admin/js/common.js}"></script>
     <script th:each="file : ${addScript}" th:src="@{/admin/js/{file}.js?v={v}(file=${file},v=${@siteConf.get('cssJsVersion')})}"></script>
@@ -39,6 +40,6 @@
         <section layout:fragment="content"></section>
     </section>
 </main>
-<!--<iframe name="ifrmProcess" class="dn"></iframe>-->
+<iframe name="ifrmProcess" class="dn"></iframe>
 </body>
 </html>

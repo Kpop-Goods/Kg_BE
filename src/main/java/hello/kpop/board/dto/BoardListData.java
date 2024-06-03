@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BoardListData {
 
+    private Long noticeId;
+
     private String nickName;
 
     private String subject;
@@ -27,6 +29,7 @@ public class BoardListData {
 
 
     public BoardListData(Board board){
+        this.noticeId=board.getNoticeId();
         this.nickName= board.getUser().getNickname();
         this.subject = board.getSubject();
         this.content = board.getContent();

@@ -41,7 +41,6 @@ public class Board extends BaseMember {
     @JoinColumn(name="user_fk")
     private User user; //유저 아이디
 
-
     // 수정시 사용할 매서드
     public void modifyBoardInfo(BoardData data){
 

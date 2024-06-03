@@ -8,6 +8,18 @@ a { text-decoration: none; }
 body { margin: 0; }
 img { border: 0; }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox  */
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
 /** 기준 너비 */
 .layout_width { max-width: 1300px; min-width: 1100px; margin: 0 auto; padding: 0 10px; }
 
@@ -24,12 +36,13 @@ select { border: 1px solid #d5d5d5; min-width: 150px; height: 45px; }
 
 /** 기본 스타일 - 체크박스, 라디오 버튼 */
 input[type='checkbox'] { display: none; }
-input[type='checkbox']+label { min-height: 32px; line-height: 1; padding: 3px 0 3px 33px; background:url("../../common/images/chk-off.png") no-repeat left center; }
-input[type='checkbox']:checked+label { background:url("../../common/images/chk-on.png") no-repeat left center; }
+input[type='checkbox']~label { min-height: 32px; line-height: 1; padding: 3px 0 3px 33px; background:url("../../common/images/chk-off.png") no-repeat left center; }
+input[type='checkbox']:checked~label { background:url("../../common/images/chk-on.png") no-repeat left center; }
 
 input[type='radio'] { display: none; }
-input[type='radio']+label { min-height: 24px; line-height: 1; padding: 3px 0 3px 25px; background:url("../../common/images/radio-off.png") no-repeat left center; }
-input[type='radio']:checked+label { background:url("../../common/images/radio-on.png") no-repeat left center; }
+input[type='radio']~label { min-height: 24px; line-height: 1; padding: 3px 0 3px 25px; background:url("../../common/images/radio-off.png") no-repeat left center; }
+input[type='radio']:checked~label { background:url("../../common/images/radio-on.png") no-repeat left center; }
+input[type='date']{display: inline-block; margin-right: 2%; width: 20%}
 
 .dn { display: none !important; }
 
@@ -92,6 +105,86 @@ nav.submenus { background: #fff; box-shadow: 1px 1px 5px #cdced5; margin-bottom:
 nav.submenus a.on { background: #596b99; color: #fff; }
 nav.submenus a { line-height: 60px; padding: 0 40px; font-size: 18px; }
 
+/*회원 관리 페이지에 만들어갈 css (따로 분리)*/
+.table-list {
+    border: 1px #a39485 solid;
+    font-size: .9em;
+    box-shadow: 0 2px 5px rgba(0,0,0,.25);
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 5px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.thead-list {
+    font-weight: bold;
+    color: #fff;
+    background: #7fa7e5;
+}
+
+td, th {
+    padding: 1em .5em;
+    vertical-align: middle;
+}
+
+td {
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    background: #fff;
+}
+@media all and (max-width: 768px) {
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+
+    }
+
+    th {
+        text-align: right;
+    }
+
+    table {
+        position: relative;
+        padding-bottom: 0;
+        border: none;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    }
+
+    thead {
+        float: left;
+        white-space: nowrap;
+    }
+
+    tbody {
+        overflow-x: auto;
+        overflow-y: hidden;
+        position: relative;
+        white-space: nowrap;
+    }
+
+    tr {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    th {
+        border-bottom: 1px solid #a39485;
+
+    }
+
+    td {
+        border-bottom: 1px solid #e5e5e5;
+    }
+}
+/*조회 데이터 없음*/
+.no_data{
+    height: 200px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
 /*공통 페이징*/
 .pagination{
     text-align: center;
@@ -108,5 +201,10 @@ nav.submenus a { line-height: 60px; padding: 0 40px; font-size: 18px; }
 .pagination a .on{
     background: #596b99;
     color: #fff;
-
+}
+#input_number{
+    width: 5%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
 }

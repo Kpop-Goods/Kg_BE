@@ -3,19 +3,16 @@ package hello.kpop.artist;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.kpop.agency.Agency;
 import hello.kpop.artist.dto.ArtistDto;
-import jakarta.persistence.*;
-import lombok.*;
 import hello.kpop.place.BaseTimeEntity;
-import lombok.*;
-
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "artist")
+@Table(name = "artist", indexes = {@Index(name="index_name" , columnList = "artistName")})
 public class Artist extends BaseTimeEntity {
 
     //아티스트 ID (PK)

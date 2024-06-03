@@ -23,7 +23,7 @@ public class MessageSourceConfig implements WebMvcConfigurer {
     public MessageSource messageSource() {
         ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
         ms.setDefaultEncoding("UTF-8");
-        ms.setBasenames("messages.validations", "messages.errors");
+        ms.setBasenames("messages.commons","messages.validations", "messages.errors");
         return ms;
     }
 
@@ -35,6 +35,8 @@ public class MessageSourceConfig implements WebMvcConfigurer {
         //registry.addInterceptor(siteConfigInterceptor)
         //        .addPathPatterns("/**");
     }
+
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();

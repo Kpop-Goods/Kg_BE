@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{front/layouts/main}">
+
+<main layout:fragment="content">
+    <form method="post" th:action="@{/login}" autocomplete="off">
+        <h1>로그인</h1>
+        <input th:if="${redirectURL != null}" type="hidden" name="redirectURL" th:value="${redirectURL}">
+        <div class="rows">
+            <input class="join_input" type="text" name="email" th:placeholder="#{이메일}" >
+        </div>
+        <div class="rows">
+            <input type="password" name="password" th:placeholder="#{비밀번호}">
+        </div>
+        <button type="submit" th:text="#{로그인}"></button>
+    </form>
+</main>
+
+</html>

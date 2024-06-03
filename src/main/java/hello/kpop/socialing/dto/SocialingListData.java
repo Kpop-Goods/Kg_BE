@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -23,6 +25,7 @@ public class SocialingListData {
  private int quota;
  private int view; // 조회수
  private int like;  //좋아요
+ private LocalDateTime regDt;
 
 
 
@@ -37,7 +40,7 @@ public class SocialingListData {
   this.view=socialing.getView();
   this.like=socialing.getLike();
   this.quota = socialing.getQuota();
-
+  this.regDt = socialing.getRegDt();
  }
 
 
