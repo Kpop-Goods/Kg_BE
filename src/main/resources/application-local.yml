@@ -8,10 +8,6 @@ server:
       force: true
 
 spring:
-  # 프로필 설정
-  # profiles:
-  # active: prod
-  # include: oauth, jwt, data, mail, s3
   application:
     name: user-service
   main:
@@ -31,23 +27,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  # 타임리프 설정
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
+  flyway:
+    enabled: true
 
-  # neo4j
-  spring:
-    neo4j:
-      uri: bolt://52.78.7.199:7687
-      authentication:
-        username: neo4j
-        password: neo4jneo4j
-  logging:
-    level:
-      org:
-        springframework:
-          data:
-            neo4j: ERROR
-  neo4j:
-    authentication:
-      username:
 
   mvc:
     pathmatch:

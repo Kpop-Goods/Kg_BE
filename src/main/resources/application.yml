@@ -1,3 +1,6 @@
+
+# default profile
+
 server:
   port: 8082
   servlet:
@@ -6,15 +9,25 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+---
 
 spring:
-  # 프로필 설정
+  config: # set profile
+    activate:
+      on-profiles: local
+
   profiles:
-    active: dev
+#    active: dev
     include: oauth, jwt, data, mail, s3
+    group: # override production setting with application-dev.yml
+      local: oauth, jwt, data, mail, s3, dev
 ---
+
 spring:
-  # 프로필 설정
+  config: # set profile
+    activate:
+      on-profiles: prod
   profiles:
-    active: local
-    include: oauth, jwt, data, mail, s3
+    group: # production settings
+      prod: oauth, jwt, data, mail, s3
+---

@@ -3,17 +3,23 @@ package hello.kpop.artist;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.kpop.agency.Agency;
 import hello.kpop.artist.dto.ArtistDto;
+import hello.kpop.image.StringListConverter;
+import hello.kpop.socialing.common.entitiy.Base;
+import jakarta.persistence.*;
+import lombok.*;
 import hello.kpop.place.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "artist", indexes = {@Index(name="index_name" , columnList = "artistName")})
-public class Artist extends BaseTimeEntity {
+@Table(name = "artist")
+public class Artist extends Base {
 
     //아티스트 ID (PK)
     @Id
@@ -58,6 +64,20 @@ public class Artist extends BaseTimeEntity {
     @ManyToOne(fetch= FetchType.LAZY) //소속사는 여러 명의 아티스트를 가질 수 있음
     @JoinColumn(name = "agency_fk")
     private Agency agency; // fk(=Agency_pk)
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "image_urls")
+    private List<String> imageUrls;
+
+    // 이미지 URL 리스트를 추가하는 메서드
+    public void addImageUrl(String imageUrl) {
+        this.imageUrls.add(imageUrl);
+    }
+
+    // 이미지 URL 리스트를 설정하는 메서드
+    public void updateImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
 
     //Image 조인
 //    @OneToMany

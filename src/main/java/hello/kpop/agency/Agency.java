@@ -1,6 +1,8 @@
 package hello.kpop.agency;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hello.kpop.image.StringListConverter;
+import hello.kpop.socialing.common.entitiy.Base;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -21,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "agency")
 @Builder
-public class Agency extends BaseTimeEntity {
+public class Agency extends Base {
 
     //소속사 ID
     @Id
@@ -58,6 +60,20 @@ public class Agency extends BaseTimeEntity {
     //등록 아이디
     @Column(name = "reg_id", length = 100)
     private String regId;
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "image_urls")
+    private List<String> imageUrls;
+
+    // 이미지 URL 리스트를 추가하는 메서드
+    public void addImageUrl(String imageUrl) {
+        this.imageUrls.add(imageUrl);
+    }
+
+    // 이미지 URL 리스트를 설정하는 메서드
+    public void updateImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
 
     /*
      * 소속사는 여러 아티스트를 가질 수 있으므로

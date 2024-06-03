@@ -144,7 +144,7 @@ public class SocialingInfoService {
         }
 
         // 키워드 검색
-        String name = searchDto.getSocialing_name();
+        String name = searchDto.getName();
         String artist = searchDto.getArtist();
         String type = searchDto.getType();
         String place = searchDto.getPlace();

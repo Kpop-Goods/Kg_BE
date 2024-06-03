@@ -1,6 +1,7 @@
 package hello.kpop.socialing.service;
 
 
+import hello.kpop.follow.FollowService;
 import hello.kpop.socialing.SocialingStatus;
 import hello.kpop.socialing.common.UserAuthentication;
 import hello.kpop.socialing.entity.Socialing;
@@ -21,6 +22,7 @@ public class SocialingDeleteService {
 
     private final SocialingRepository socialingRepository;
     private final UserAuthentication userAuthentication;
+	private final FollowService followService; // follow service by neo4j
 
     @Transactional
     public void deleteSocial(Long id, Authentication authentication) {
@@ -41,5 +43,7 @@ public class SocialingDeleteService {
         // 소셜링의 타입을 변경하고 저장
         socialing.updateType(SocialingStatus.COMPLETE);
         socialingRepository.save(socialing);
-    }
+
+		followService.deleteMeet(socialing.getSocialingId()); // delete a meet node
+	}
 }
