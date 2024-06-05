@@ -43,7 +43,6 @@ import static org.springframework.data.domain.Sort.Order.desc;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-
 public class SocialingInfoService {
 
 
@@ -56,7 +55,7 @@ public class SocialingInfoService {
 
 
     //단일 조회
-    public SocialingViewData findSocial(Long id){
+    public SocialingViewData findSocial(Long id) {
         Socialing socialing = socialingRepository.findById(id).orElseThrow(SocialingNotFoundException::new);
         SocialingStatus yn = socialing.getDel_yn();
         if (yn.equals(SocialingStatus.COMPLETE)) {
@@ -99,8 +98,8 @@ public class SocialingInfoService {
     }
 
     //목록 조회 및 검색과 페이징 처리
-    public ListData<SocialingListData> getList(SocialingSearchData searchDto){
-        int page = ProcessUtils.onlyPositiveNumber(searchDto.getPage(),1);
+    public ListData<SocialingListData> getList(SocialingSearchData searchDto) {
+        int page = ProcessUtils.onlyPositiveNumber(searchDto.getPage(), 1);
         int limit = ProcessUtils.onlyPositiveNumber(searchDto.getLimit(), 20);
         int offset = (page - 1) * limit;
 
@@ -115,26 +114,26 @@ public class SocialingInfoService {
         sopt = StringUtils.hasText(sopt) ? sopt.toUpperCase() : "ALL";
 
         //조건별 키워드 검색
-        if(StringUtils.hasText(skey) ){
-            skey=skey.trim();
+        if (StringUtils.hasText(skey)) {
+            skey = skey.trim();
             BooleanExpression name = socialing.socialing_name.contains(skey);
             BooleanExpression place = socialing.social_place.contains(skey);
             BooleanExpression type = socialing.type.contains(skey);
             BooleanExpression artist = socialing.artist.artistName.contains(skey);
 
-            if(sopt.equals("name")){ //제목으로 검색
+            if (sopt.equals("name")) { //제목으로 검색
                 andBuilder.and(name);
 
-            } else if(sopt.equals("place")){ //지역으로 검색
+            } else if (sopt.equals("place")) { //지역으로 검색
                 andBuilder.and(place);
 
-            } else if(sopt.equals("artist")){  //아티스트 이름 검색
+            } else if (sopt.equals("artist")) {  //아티스트 이름 검색
                 andBuilder.and(artist);
 
-            } else if(sopt.equals("type")){ //타입으로 검색
-                andBuilder.and(type) ;
+            } else if (sopt.equals("type")) { //타입으로 검색
+                andBuilder.and(type);
 
-            } else if(sopt.equals("ALL")){ //통합 검색 (제목 지역 타입 아티스트 )
+            } else if (sopt.equals("ALL")) { //통합 검색 (제목 지역 타입 아티스트 )
                 BooleanBuilder orBuilder = new BooleanBuilder();
                 orBuilder.or(name)
                         .or(place)
@@ -145,7 +144,7 @@ public class SocialingInfoService {
         }
 
         // 키워드 검색
-        String name = searchDto.getSocialing_name();
+        String name = searchDto.getName();
         String artist = searchDto.getArtist();
         String type = searchDto.getType();
         String place = searchDto.getPlace();
@@ -168,7 +167,7 @@ public class SocialingInfoService {
         }
 
 
-        List<SocialingListData> items =  jpaQueryFactory
+        List<SocialingListData> items = jpaQueryFactory
                 .selectFrom(socialing)
                 .leftJoin(socialing.user)
                 .fetchJoin()
@@ -187,70 +186,55 @@ public class SocialingInfoService {
         // long total = socialingRepository.count(andBuilder);
 
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("regDt")));
-        Page<Socialing>  data = socialingRepository.findAll(andBuilder,pageable);
+        Page<Socialing> data = socialingRepository.findAll(andBuilder, pageable);
 
-        Pagination pagination = new Pagination(page, (int)data.getTotalElements(), 10, limit, request);
+        Pagination pagination = new Pagination(page, (int) data.getTotalElements(), 10, limit, request);
         ListData<SocialingListData> listData = new ListData<>();
         listData.setContent(items);
         listData.setPagination(pagination);
 
-        filterList(listData);
+//        filterList(listData);
 
         return listData;
     }
 
     //목록 데이터 필터링 (모집이 완료된 소셜링 데이터 필터)
-    public void filterList(ListData<SocialingListData> dataList) {
-        List<SocialingListData> content = dataList.getContent();
+    public ListData<SocialingListData> filterList(SocialingSearchData searchData) {
+        ListData<SocialingListData> dataList = getList(searchData);
 
+        List<SocialingListData> content = dataList.getContent();
         List<SocialingListData> filteredList = content.stream()
                 .filter(data -> !data.getDel_yn().equals(SocialingStatus.COMPLETE))
                 .collect(Collectors.toList());
         dataList.setContent(filteredList);
+
+        return dataList;
     }
 
 
-
     //조회수 구현
-    public void socialingViewCount(Long id){
+    public void socialingViewCount(Long id) {
         Socialing socialing = socialingRepository.findById(id).orElseThrow(SocialingNotFoundException::new);
 
-        if( socialing ==null) return;
-        try{
-            int uid = utils.isLogin() ?utils.getUser().getId().intValue() : utils.guestId();
+        if (socialing == null) return;
+        try {
+            int uid = utils.isLogin() ? utils.getUser().getId().intValue() : utils.guestId();
 
-            SocialingView socialingView = new SocialingView(id,uid);
+            SocialingView socialingView = new SocialingView(id, uid);
 
             viewRepository.saveAndFlush(socialingView);
 
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
 
         //조회수 카운팅 후 업데이트 ( querydsl )
         QSocialingView sv = QSocialingView.socialingView;
-        int  viewCount = (int) viewRepository.count(sv.id.eq(id));
+        int viewCount = (int) viewRepository.count(sv.id.eq(id));
 
         socialing.setView(viewCount);
         viewRepository.flush();
 
     }
-
-
-
-
-    //        String name= socialing.getArtist().getArtistName();
-//        String agency = socialing.getArtist().getAgency().getAgencyName();
-//
-//        modelMapper.typeMap(Socialing.class, SocialingViewData.class).addMappings(mapper -> {
-//            if(StringUtils.hasText(name)){
-//                mapper.map(s -> s.getArtist().getArtistName(), SocialingViewData::setArtistName);
-//            }
-//            if(StringUtils.hasText(agency)){
-//                mapper.map(s -> s.getArtist().getAgency().getAgencyName(), SocialingViewData::setAgencyName);
-//            }
-//        });
-
-
-
 
 
 }

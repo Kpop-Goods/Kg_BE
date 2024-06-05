@@ -6,18 +6,14 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 //소셜링 등록 요청 데이터
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class SocialingData {
 
 
@@ -56,6 +52,8 @@ public class SocialingData {
 
     @NotNull
     private SocialingStatus del_yn; // 모집 여부
+
+    private String mode;
 
 
 

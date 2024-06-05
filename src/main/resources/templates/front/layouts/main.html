@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+<!--  <meta name="_csrf" th:content="${_csrf.token}">-->
+<!--  <meta name="_csrf_header" th:content="${_csrf.headerName}">-->
+  <meta name="description" th:content="${@siteConf.get('siteDescription')}">
+  <title>
+    <th:block th:if="${pageTitle != null}" th:text="${pageTitle + ' ::'}"></th:block>
+    <th:block th:text="${@siteConf.get('siteTitle')}"></th:block>
+  </title>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+
+  <link rel="stylesheet" type="text/css" th:href="@{/common/css/style.css?v={v}(v=${@siteConf.get('cssJsVersion')})}">
+  <link rel="stylesheet" type="text/css" th:href="@{/common/css/reset.css?v={v}(v=${@siteConf.get('cssJsVersion')})}">
+  <link rel="stylesheet" type="text/css" th:href="@{/common/css/sub.css?v={v}(v=${@siteConf.get('cssJsVersion')})}" />
+
+  <link rel="stylesheet" type="text/css" th:each="file : ${addCommonCss}"
+        th:href="@{/common/css/{file}.css?v={v}(file=${file},v=${@siteConf.get('cssJsVersion')})}">
+
+  <link rel="stylesheet" type="text/css" th:href="@{/front/css/style.css?v={v}(v=${@siteConf.get('cssJsVersion')})}">
+  <link rel="stylesheet" type="text/css" th:href="@{/front/css/sub.css?v={v}(v=${@siteConf.get('cssJsVersion')})}">
+  <link rel="stylesheet" type="text/css" th:each="file : ${addCss}"
+        th:href="@{/front/css/{file}.css?v={v}(file=${file}, v=${@siteConf.get('cssJsVersion')})}">
+
+
+  <th:block layout:fragment="addCss"></th:block>
+  <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+  <script th:src="@{/common/js/common.js}"></script>
+  <script th:each="file : ${addCommonScript}" th:src="@{/common/js/{file}.js?v={v}(file=${file}, v=${@siteConf.get('cssJsVersion')})}"></script>
+
+  <script th:src="@{/front/js/common.js}"></script>
+  <script th:each="file : ${addScript}" th:src="@{/front/js/{file}.js?v={v}(file=${file},v=${@siteConf.get('cssJsVersion')})}"></script>
+
+  <th:block layout:fragment="addScript"></th:block>
+
+</head>
+<body>
+<!--<header th:replace="~{front/outlines/header::common}"></header>-->
+
+<main layout:fragment="content"></main>
+
+<!--<footer th:replace="~{front/outlines/footer::common}"></footer>-->
+
+<!--<iframe name="ifrmProcess" class="dn"></iframe>-->
+</body>
+</html>

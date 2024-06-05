@@ -29,4 +29,6 @@ public class BoardData {
 
     private String createdBy; // 작성자
 
+    private String mode;
+
 }

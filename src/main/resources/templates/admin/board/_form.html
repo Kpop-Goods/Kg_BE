@@ -1,0 +1,55 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="common" th:object="${boardData}">
+
+    <div class="errors" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+    <table class="table-cols">
+        <tr>
+            <th>게시판 제목</th>
+            <td th:if="*{mode != 'edit'}">
+                <input type="text" name="subject" th:field="*{subject}">
+                <div class="errors" th:each="err :${#fields.errors('subject')}" th:text="${err}"></div>
+            </td>
+
+            <td th:if="*{mode == 'edit'}">
+                <input type="hidden" name="subject" th:field="*{subject}">
+                <th:block th:text="*{subject}"></th:block>
+            </td>
+        </tr>
+
+        <tr>
+           <th>게시판 내용</th>
+            <td>
+            <textarea name="category" placeholder="내용을 입력하세요" th:field="*{content}"></textarea>
+            <div class="errors" th:each="err :${#fields.errors('content')}" th:text="${err}"></div>
+            </td>
+        </tr>
+        <tr>
+            <th>노출 여부</th>
+            <td>
+                <span>
+                    <input type="radio" name="notice_yn" value="true" id="notice_yn-yes" th:field="*{notice_yn}">
+                    <label for="notice_yn-yes">사용</label>
+                </span>
+                <span>
+                    <input type="radio" name="notice_yn" value="false" id="notice_yn-no" th:field="*{notice_yn}">
+                    <label for="notice_yn-no">미사용</label>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th>삭제 여부</th>
+            <td>
+                <span>
+                    <input type="radio" name="del_yn" value="true" id="del_yn-yes" th:field="*{del_yn}">
+                    <label for="del_yn-yes">사용</label>
+                </span>
+                <span>
+                    <input type="radio" name="del_yn" value="false" id="del_yn-no" th:field="*{del_yn}">
+                    <label for="del_yn-no">미사용</label>
+                </span>
+            </td>
+        </tr>
+    </table>
+</th:block>
+</html>

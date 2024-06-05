@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="common" th:object="${socialingData}">
+    <div class="errors" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+    <table class="table-cols">
+
+        <tr>
+            <th>소셜링 제목</th>
+            <td th:if="*{mode !='edit'}">
+            <input type="text" name="socialing_name" th:field="*{socialing_name}" placeholder="제목을 입력해주세요">
+            <div class="errors" th:each="err :${#fields.errors('socialing_name')}" th:text="${err}"></div>
+            </td>
+
+            <td th:if="*{mode == 'edit'}">
+                <input type="hidden" name="socialing_name" th:field="*{socialing_name}">
+                <th:block th:text="*{socialing_name}"></th:block>
+            </td>
+        </tr>
+        <tr>
+            <th>소셜링 내용</th>
+            <td>
+                <textarea name="socialing_content" placeholder="내용을 입력해주세요" th:field="*{socialing_content}"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>아티스트 이름</th>
+            <td>
+                <select id="search-input" name="artistName" class="search_box">
+                    <option disabled selected>아티스트 선택</option>
+                    <th:block th:each="name : ${nameList}">
+                        <option th:value="${name}" th:text="${name}"></option>
+                    </th:block>
+                </select>
+                <div class="errors" th:each="err :${#fields.errors('artistName')}" th:text="${err}"></div>
+            </td>
+        </tr>
+        <tr>
+            <th>타입</th>
+            <td>
+                <select id="select-input-1" name="type"  class="search_box">
+                    <option disabled selected>타입 선택</option>
+                    <option value="온라인">온라인</option>
+                    <option value="오프라인">오프라인</option>
+                    <option value="기타">기타</option>
+                </select>
+                <div class="errors" th:each="err :${#fields.errors('type')}" th:text="${err}"></div>
+            </td>
+        </tr>
+        <tr>
+            <th>지역</th>
+            <td>
+                <select id="select-input-2" name="social_place"  class="search_box">
+                    <option disabled selected>지역 선택</option>
+                    <option value="서울/인천/경기">서울/인천/경기</option>
+                    <option value="강원도">강원도</option>
+                    <option value="제주도">제주도</option>
+                </select>
+                <div class="errors" th:each="err :${#fields.errors('social_place')}" th:text="${err}"></div>
+            </td>
+        </tr>
+        <tr>
+            <th>날짜</th>
+            <td>
+                <input name="start_date" id="startDate" class="date-input" type="date"  th:field="*{start_date}" onchange="setMinAndMaxEndDate(this.value)"/>
+                <div class="errors" th:each="err :${#fields.errors('start_date')}" th:text="${err}"></div>
+
+                <input name="end_date" id="endDate" class="date-input" type="date" th:field="*{end_date}"/>
+                <div class="errors" th:each="err :${#fields.errors('end_date')}" th:text="${err}"></div>
+
+            </td>
+        </tr>
+        <tr>
+            <th>인원수</th>
+            <td>
+                <input  id="input_number" name="quota" type="number" min="1" value="1">명
+            </td>
+        </tr>
+        <tr>
+            <th>채팅 링크</th>
+            <td>
+                <input name="chat_url" type="text" placeholder="http://example.com 또는 https://example.com">
+            </td>
+        </tr>
+        <tr>
+            <th>삭제 여부</th>
+            <td>
+                <span>
+                    <input type="radio" name="del_yn" value="RECRUIT" id="del_yn-yes" th:field="*{del_yn}">
+                    <label for="del_yn-yes">활성화</label>
+                </span>
+                <span>
+                    <input type="radio" name="del_yn" value="COMPLETE" id="del_yn-no" th:field="*{del_yn}">
+                    <label for="del_yn-no">비활성화</label>
+                </span>
+            </td>
+        </tr>
+    </table>
+</th:block>
+
+</html>

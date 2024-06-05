@@ -27,6 +27,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  # 타임리프 설정
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
+  flyway:
+    enabled: true
+
 
   mvc:
     pathmatch:

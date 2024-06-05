@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layouts/main}">
+<section layout:fragment="content">
+    <h1>아티스트 목록</h1>
+    <form th:method="get" th:action="@{admin/artist}" target="ifrmProcess" autocomplete="off">
+        <div>
+            <table class="table-list">
+                <thead class="thead-list">
+                <tr>
+                    <th th:text="#{아티스트_이름}"></th>
+                    <th th:text="#{설명}"></th>
+                </tr>
+                </thead>
+                <tbody class="tbody-list">
+                <th:block th:if="${artists != null && artists.size()>0}">
+                <tr th:each="artistresponsedto : ${artists}" th:object="${artistresponsedto}">
+                    <td th:text="*{artistName}"></td>
+                    <td th:text="*{comment}"></td>
+                </th:block>
+                    <th:block th:unless="${artists != null  && artists.size() >0}">
+                        <tr>
+                            <td colspan="7" class="no_data">조회된 데이터 목록이 없습니다.</td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+        </div>
+    </form>
+    <th:block th:if="${artists != null && !artists.isEmpty()}" th:replace="~{common/_pagination::pagination}"></th:block>
+</section>
+</html>

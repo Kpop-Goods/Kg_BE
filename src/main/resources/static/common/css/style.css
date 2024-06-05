@@ -1,0 +1,10 @@
+.dn { display: none !important; }
+
+/* 공통 여백 */
+.mb10 { margin-bottom: 10px; }
+.mb20 { margin-bottom: 20px; }
+.mb5 { margin-bottom: 5px; }
+.mt5 { margin-top: 5px; }
+.mt10 { margin-top: 10px; }
+.mt20 { margin-top: 20px; }
+.ck-editor__editable { min-height: 450px; }

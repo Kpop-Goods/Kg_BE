@@ -23,6 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAll();
 
+
+
     // 잠금횟수 증가 로직
     @Transactional
     @Modifying
