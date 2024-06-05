@@ -8,9 +8,8 @@ import hello.kpop.socialing.common.entitiy.Base;
 import jakarta.persistence.*;
 import lombok.*;
 import hello.kpop.place.BaseTimeEntity;
-import lombok.*;
-
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 

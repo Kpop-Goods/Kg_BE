@@ -38,7 +38,7 @@ public class BoardController {
     // 전체 목록 조회
     @GetMapping("/list")
     public ListData<BoardListData> getBoardList(BoardSearchData data) {
-        ListData<BoardListData> boardList = infoService.getList(data);
+        ListData<BoardListData> boardList = infoService.filterList(data);
         return new ListData<>(boardList.getContent() , boardList.getPagination());
     }
 

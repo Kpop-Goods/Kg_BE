@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layouts/main}">
+<section layout:fragment="content">
+    <h1>게시판 관리</h1>
+
+    <form name="frmSearch" method="get" th:action="@{/admin/board/manage}" autocomplete="off" th:object="${boardSearchData}">
+
+        <table class="table-cols">
+            <tr>
+                <th>키워드 검색</th>
+                <td colspan="3">
+                    <div class="input_grp">
+                        <select name="sopt" th:field="*{sopt}">
+                            <option value="ALL">통합검색</option>
+                            <option value="subject">게시판 제목</option>
+                            <option value="content">게시판 내용</option>
+                        </select>
+                        <input type="text" name="skey" th:field="*{skey}">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>노출 여부</th>
+                <td>
+                    <span>
+                        <input type="checkbox" name="notice_yn" value="true" id="notice_yn_true" th:field="*{notice_yn}">
+                        <label for="notice_yn_true">활성화</label>
+                    </span>
+                    <span>
+                        <input type="checkbox" name="notice_yn" value="false" id="notice_yn_false" th:field="*{notice_yn}">
+                        <label for="notice_yn_false">비 활성화</label>
+                    </span>
+                </td>
+                <th>삭제 여부</th>
+                <td>
+                    <span>
+                        <input type="checkbox" name="del_yn" value="true" id="del_yn_true" th:field="*{del_yn}">
+                        <label for="del_yn_true">활성화</label>
+                    </span>
+                    <span>
+                        <input type="checkbox" name="del_yn" value="false" id="del_yn_false" th:field="*{del_yn}">
+                        <label for="del_yn_false">비 활성화</label>
+                    </span>
+                </td>
+            </tr>
+        </table>
+        <div class="search_btn">
+            <button type="submit">조회하기</button>
+        </div>
+    </form>
+
+    <h1 th:text="${pageTitle}"></h1>
+    <form name="frmList" method="post" th:action="@{/admin/board}" target="ifrmProcess" autocomplete="off">
+        <input type="hidden" name="_method" value="PATCH">
+        <table class="table-rows">
+            <thead>
+            <tr>
+                <th width="40">
+                    <input type="checkbox" class="checkall" id="checkall" data-target-name="idx">
+                    <label for="checkall"></label>
+                </th>
+                <th th:text="#{게시글_제목}"></th>
+                <th th:text="#{노출여부}"></th>
+                <th th:text="#{삭제여부}"></th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+                <th:block th:unless="${boards != null  && boards.size() >0}">
+                    <tr>
+                        <td colspan="7" class="no_data">조회된 목록이 없습니다.</td>
+                    </tr>
+                </th:block>
+                <tr th:each="boardlistdata,status : ${boards}" th:object="${boardlistdata}">
+                    <td>
+                        <input type="hidden" th:name="${'sub_' + status.index}" th:value="*{noticeId}">
+                        <input type="checkbox" name="idx" th:value="${status.index}" th:id="${'idx_'+status.index}">
+                        <label th:for="${'idx_'+status.index}"></label>
+                    </td>
+                    <td th:text="*{subject}"></td>
+                    <td>
+                        <select th:name="${'notice_yn_' + status.index}">
+                            <option value="true" th:selected="*{notice_yn}">활성화</option>
+                            <option value="false" th:selected="*{!notice_yn}">비활성화</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select th:name="${'del_yn_' + status.index}">
+                            <option value="true" th:selected="*{del_yn}">활성화</option>
+                            <option value="false" th:selected="*{!del_yn}">비활성화</option>
+                        </select>
+                    </td>
+
+                    <td>
+                        <a th:href="@{/admin/board/edit/{noticeId}(noticeId=*{noticeId})}" class="sbtn">설정 수정</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="table-action">
+            <button type="button" class="sbtn form-action" data-mode="update" data-target-name="frmList">선택 수정</button>
+            <button type="button" class="sbtn blue form-action" data-mode="delete" data-target-name="frmList">선택 삭제</button>
+        </div>
+    </form>
+
+    <th:block th:if="${boards != null && ! boards.size() >0}" th:replace="~{common/_pagination::pagination}"></th:block>
+</section>
+</html>

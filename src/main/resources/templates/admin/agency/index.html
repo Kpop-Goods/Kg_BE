@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layouts/main}">
+<section layout:fragment="content">
+    <h1>소속사 목록</h1>
+
+    <form th:method="get" th:action="@{admin/agency}" target="ifrmProcess" autocomplete="off">
+        <input type="hidden" name="mode" value="edit">
+
+        <table class="table-list">
+            <thead class="thead-list">
+                <tr>
+                    <th th:text="#{소속사_이름}"></th>
+                    <th th:text="#{삭제여부}"></th>
+                    <th th:text="#{등록일자}"></th>
+                </tr>
+            </thead>
+            <tbody class="tbody-list">
+            <th:block th:if="${agencies != null && agencies.size()>0}">
+                <tr th:each="agencyresponsedto:${agencies}" th:object="${agencyresponsedto}">
+                    <td th:text="*{agencyName}"></td>
+                    <td th:text="*{delYN}"></td>
+                    <td th:text="*{#temporals.format(regDt,'yyyy년MM월dd일 HH:mm')}"></td>
+            </th:block>
+            <th:block th:unless="${agencies != null  && agencies.size() >0}">
+                <tr>
+                    <td colspan="7" class="no_data">조회된 데이터 목록이 없습니다.</td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </form>
+    <th:block th:if="${agencies != null && !agencies.isEmpty()}" th:replace="~{common/_pagination::pagination}"></th:block>
+
+</section>
+</html>
