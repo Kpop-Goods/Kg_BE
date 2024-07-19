@@ -99,6 +99,7 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/email/**")).authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/agency/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/artist/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/goods/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/place/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/board/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/file/**")).permitAll()

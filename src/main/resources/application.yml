@@ -17,8 +17,6 @@ spring:
       on-profiles: local
 
   profiles:
-#    active: dev
-    include: oauth, jwt, data, mail, s3
     group: # override production setting with application-dev.yml
       local: oauth, jwt, data, mail, s3, dev
 ---
