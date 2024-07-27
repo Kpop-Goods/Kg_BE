@@ -158,7 +158,7 @@
 # 프로젝트 멤버
 
 ## Back-End
-- [김찬미](https://github.com/kcm02)
+- [김찬미](https://github.com/kcm02): 회원 기능(`User`), 보안(`Spring Security`, `JWT`), 이미지 업로드(`AWS EC2`) 개발
 
 - [박태훈](https://github.com/Anthony-Park)
 
