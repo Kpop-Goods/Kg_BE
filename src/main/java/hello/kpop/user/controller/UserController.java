@@ -83,11 +83,9 @@ public class UserController {
             return ResponseEntity.ok().body(new CustomResponse(HttpStatus.OK.value(), "회원가입 성공", null));
         } catch (DuplicateEmailException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomResponse(400, e.getMessage(), null));
-        }
-
-//        catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomResponse(500, "회원가입 실패", null));
-//        }
+        } catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomResponse(500, "회원가입 실패", null));
+       }
     }
 
     // 유저 회원정보 수정 API
